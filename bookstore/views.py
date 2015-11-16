@@ -1,14 +1,9 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from .models import Book
+from .models import Book,Customer
 
 def index(request):
-    return HttpResponse("Hello, world. You're at the polls index.")
-
-def index(request):
-    book_list = Book.objects.order_by('title')
-#    output = ', '.join([b.title for b in book_list])
-#    return HttpResponse(output)
-
-    context = {'book_list': book_list}
-    return render(request, 'bookstore/login.html', context)
+	book_list = Book.objects.order_by('title')
+	current_user = Customer.objects.order_by("full_name")[0]
+	context = {'book_list': book_list, 'username': current_user.full_name,}
+	return render(request, 'bookstore/index.html', context)
