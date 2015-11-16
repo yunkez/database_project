@@ -1,0 +1,55 @@
+{% load staticfiles %}
+
+<html ng-app="myApp">
+<body ng-cloak="">
+  <title>Online Bookstore Application</title>
+  <link rel="stylesheet" href="{% static 'bookstore/css/bootstrap.min.css' %}" type="text/css" />
+  <link rel="stylesheet" href="{% static 'bookstore/css/custom.css' %}" type="text/css" />
+  <link rel="stylesheet" href="{% static 'bookstore/css/font-awesome.min.css' %}" type="text/css" />
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+  <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav">
+          <a class="blog-nav-item active" href="#">Welcome! username</a>
+          <a class="blog-nav-item pull-right" href="http://www.angularcode.com/product-inventory-management-using-angularjs-mysql-and-php-restful-api">My Order Records</a>
+          <a class="blog-nav-item pull-right" href="http://www.angularcode.com/download-link/?url=https://app.box.com/s/pqr0wo3osvoahyh7qtsa">Logout</a>
+        </nav>
+      </div>
+    </div>
+
+<div class="container">
+    <div class="page-content">
+      <div ng-view="" id="ng-view"></div>
+    </div>
+</div>
+
+<!-- Libraries -->
+<script src="{% static 'bookstore/js/angular.min.js' %}"></script>
+<script src="{% static 'bookstore/js/ui-bootstrap-tpls-0.11.2.min.js' %}"></script>
+<script src="{% static 'bookstore/js/angular-route.min.js' %}"></script>
+<script src="{% static 'bookstore/js/angular-animate.min.js' %}"></script>
+
+<!-- AngularJS custom codes -->
+<script src="{% static 'bookstore/app/app.js' %}"></script>
+<script src="{% static 'bookstore/app/data.js' %}"></script>
+<script src="{% static 'bookstore/app/directives.js' %}"></script>
+<script src="{% static 'bookstore/app/productsCtrl.js' %}"></script>
+
+<!-- Some Bootstrap Helper Libraries -->
+
+<script src="{% static 'bookstore/js/jquery.min.js' %}"></script>
+<script src="{% static 'bookstore/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'bookstore/js/underscore.min.js' %}"></script>
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+<script src="{% static 'bookstore/js/ie10-viewport-bug-workaround.js' %}"></script>
+{% if book_list %}
+    <ul>
+    {% for book in book_list %}
+        <li>{{ book.title }}</li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No books are available.</p>
+{% endif %}
+</body>
+</html>
