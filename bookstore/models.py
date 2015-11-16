@@ -29,7 +29,7 @@ class Customer(models.Model):
 	address = models.CharField(max_length=100)
 	card_number = models.BigIntegerField()
 	def __unicode__(self):
-		return self.title
+		return self.full_name
 
 class Opinion(models.Model):
     customer = models.ForeignKey(Customer)
