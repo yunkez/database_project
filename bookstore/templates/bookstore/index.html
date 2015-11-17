@@ -90,50 +90,28 @@
 
 <script type="text/ng-template" id="BookDetailModal.html">
         <div class="modal-header">
-            <h4 class="modal-title">Book Detail</h4>
+            <h4 class="modal-title">{$c.title$}</h4>
+            <a ng-click="">add</a>
+            <a ng-click="">review</a>
         </div>
         <div class="modal-body">
-          <table class="table table-striped">
-              <tr>
-                <th>ISBN</th>
-                <th>Title</th>
-                <th>Price</th>
-                <th>Author</th>
-                <th>Subject</th>
-              </tr>
-              <tr>
-                  <td>{$c.ISBN$}</td>
-                  <td>{$c.title$}</td>
-                  <td>{$c.price$}</td>
-                  <td>{$c.author$}</td>
-                  <td>{$c.subject$}</td>
-              </tr>
-              </table>
+        <form>
+          <div class="form-class"><label>ISBN: </label><label>{$c.ISBN$}</label></div>
+          <div class="form-class"><label>Author: </label><label>{$c.author$}</label></div>
+          <div class="form-class"><label>Publisher: </label><label>{$c.publisher$}</label></div>
+          <div class="form-class"><label>Format: </label><label>{$c.format$}</label></div>
+          <div class="form-class"><label>Subject: </label><label>{$c.subject$}</label></div>
+          <div class="form-class"><label>Keywords: </label><label>{$c.keywords$}</label></div>
+          <div class="form-class"><label>Publication Year: </label><label>{$c.year_of_publication$}</label></div>
+          <div class="form-class"><label>price: </label><label>{$c.price$}</label></div>
+          <div class="form-class"><label>copies: </label><label>{$c.copies$}</label></div>
+        </form>
         </div>
         <div class="modal-footer">
             <button class="btn btn-primary" ng-click="ok()">OK</button>
-            <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+            <button class="btn btn-primary" ng-click="cancel()">Cancel</button>
         </div>
 </script>
-
-<!-- <div id="BookDetailModal" class="modal fade" role="dialog">
-  <div class="modal-dialog">
-    <div class="modal-content">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h4 class="modal-title">Book{$$}</h4>
-        </div>
-            <div  class="modal-body">
-            
-            </div>
-            <div class="modal-footer">   
-                <button class="btn btn-default">Cancel</button>
-                 <button class="btn btn-default">Ok</button>
-            </div>
-    </div>
-  </div>
-</div> -->
-
 
 <div id="FeedbackModal" class="modal fade" role="dialog">
   <div class="modal-dialog">
