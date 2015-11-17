@@ -21,12 +21,13 @@ class Book(models.Model):
 	def __unicode__(self):
 		return self.title
 
-class Customer(models.Model):
+class Customer(AbstractBaseUser):
 	login_name = models.CharField(max_length=100, unique=True, blank=False)
 	full_name = models.CharField(max_length=100, blank=False)
 	phone_number = models.BigIntegerField(blank=False)
 	card_number = models.BigIntegerField(blank=False)
 	address = models.CharField(max_length=100,blank=False)
+	USERNAME_FIELD = 'login_name'
 	def __unicode__(self):
 		return self.full_name
 
