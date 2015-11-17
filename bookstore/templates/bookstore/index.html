@@ -64,16 +64,19 @@
                 <th>Copies</th>
                 <th>Format</th>
                 <th>Author</th>
+                <th>Publisher</th>
               </tr>
-              <tr ng-repeat="c in book_list">
+              <tr ng-repeat="c in book_list| filter:filterBook ">
                   <td>{$c.ISBN$}</td>
                   <td>{$c.title$}</td>
                   <td>{$c.price$}</td>
                   <td>{$c.copies$}</td>
                   <td>{$c.format$}</td>
                   <td>{$c.author$}</td>
+                  <td>{$c.publisher}</td>
               </tr>
               </table>
+
           {% else %}
               <p><i class="fa fa-ban fa-3x"></i>&nbsp;No data found</p>
           {% endif %}

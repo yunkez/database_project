@@ -4,5 +4,5 @@ from . import views
 
 urlpatterns = [
     url(r'^$', views.index, name='index'),
-    url(r'^json/$', views.book_list),
+    url(r'^all_books/$', views.book_list),
 ]
