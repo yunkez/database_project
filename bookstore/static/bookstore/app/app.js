@@ -6,5 +6,5 @@ app.config(function($interpolateProvider) {
 });
 
 app.controller( 'AppController', ['$scope', '$http', function($scope, $http) {
-    $scope.test = "abc";
+    $http.get('/bookstore/json').success(function(response) {$scope.book_list = response;});
 }])

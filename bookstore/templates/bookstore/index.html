@@ -55,7 +55,7 @@
           </div>
           </div>
           <div class="panel-body">
-          {% if bookt_list %}
+          {% if book_list %}
               <table class="table table-striped">
               <tr>
                 <th>ISBN</th>
@@ -65,18 +65,14 @@
                 <th>Format</th>
                 <th>Author</th>
               </tr>
-              <!-- {% for c in book_list %} -->
-              {% verbatim %}
-              <tr ng-repeat="c in {{book_list}}">
-                  <td>{{c.ISBN}}</td>
-                  <td>{{c.title}}</td>
-                  <td>{{c.price}}</td>
-                  <td>{{c.copies}}</td>
-                  <td>{{c.format}}</td>
-                  <td>{{c.author}}</td>
+              <tr ng-repeat="c in book_list">
+                  <td>{$c.ISBN$}</td>
+                  <td>{$c.title$}</td>
+                  <td>{$c.price$}</td>
+                  <td>{$c.copies$}</td>
+                  <td>{$c.format$}</td>
+                  <td>{$c.author$}</td>
               </tr>
-              {% endverbatim %}
-              <!-- {% endfor %} -->
               </table>
           {% else %}
               <p><i class="fa fa-ban fa-3x"></i>&nbsp;No data found</p>
