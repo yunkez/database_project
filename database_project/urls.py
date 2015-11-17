@@ -15,8 +15,12 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
+from bookstore import views
 
 urlpatterns = [
 	url(r'^bookstore/', include('bookstore.urls')),
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^login/$', views.loginview),
+    url(r'^auth/$', views.auth_and_login),
+    url(r'^signup/$', views.sign_up_in),
 ]
