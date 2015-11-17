@@ -62,25 +62,17 @@
                 <th>ISBN</th>
                 <th>Title</th>
                 <th>Price</th>
-                <th>Copies</th>
-                <th>Format</th>
                 <th>Author</th>
-                <th>Publisher</th>
                 <th>Subject</th>
-                <th>Keywords</th>
-                <th>Publication Year</th>
+                <th>Action</th>
+                <th>Feedback</th>
               </tr>
               <tr ng-repeat="c in book_list| filter:filterBook ">
                   <td>{$c.ISBN$}</td>
                   <td><a data-toggle="modal" data-target="#BookDetailModal">{$c.title$}</a></td>
                   <td>{$c.price$}</td>
-                  <td>{$c.copies$}</td>
-                  <td>{$c.format$}</td>
                   <td>{$c.author$}</td>
-                  <td>{$c.publisher$}</td>
                   <td>{$c.subject$}</td>
-                  <td>{$c.keywords$}</td>
-                  <td>{$c.year_of_publication$}</td>
                   <td><a data-toggle="modal" data-target="#FeedbackModal">add</a></td>
                   <td><a data-toggle="modal" data-target="#FeedbackModal">review</a></td>
               </tr>
