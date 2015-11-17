@@ -22,12 +22,11 @@ class Book(models.Model):
 		return self.title
 
 class Customer(models.Model):
-	full_name = models.CharField(max_length=100)
-	login_name = models.CharField(max_length=100)
-	password = models.CharField(max_length=100)
-	card_number = models.BigIntegerField()
-	address = models.CharField(max_length=100)
-	card_number = models.BigIntegerField()
+	login_name = models.CharField(max_length=100, unique=True, blank=False)
+	full_name = models.CharField(max_length=100, blank=False)
+	phone_number = models.BigIntegerField(blank=False)
+	card_number = models.BigIntegerField(blank=False)
+	address = models.CharField(max_length=100,blank=False)
 	def __unicode__(self):
 		return self.full_name
 
