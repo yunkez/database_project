@@ -1,42 +1,41 @@
 {% load staticfiles %}
 
-<html ng-app="{% block ng_app %}myApp{% endblock %}">
-<body ng-controller="{% block ng_controller %}AppController{% endblock %}">
+<html>
+<head>
   <title>Online Bookstore Application</title>
   <link rel="stylesheet" href="{% static 'bookstore/css/bootstrap.min.css' %}" type="text/css" />
   <link rel="stylesheet" href="{% static 'bookstore/css/custom.css' %}" type="text/css" />
   <link rel="stylesheet" href="{% static 'bookstore/css/font-awesome.min.css' %}" type="text/css" />
   <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+  <!-- Libraries -->
+  <script src="{% static 'bookstore/js/angular.min.js' %}"></script>
+  <script src="{% static 'bookstore/js/ui-bootstrap-tpls-0.11.2.min.js' %}"></script>
+  <script src="{% static 'bookstore/js/angular-route.min.js' %}"></script>
+  <script src="{% static 'bookstore/js/angular-animate.min.js' %}"></script>
+
+  <!-- AngularJS custom codes -->
+  <script src="{% static 'bookstore/app/app.js' %}"></script>
+
+  <!-- Some Bootstrap Helper Libraries -->
+  <script src="{% static 'bookstore/js/jquery.min.js' %}"></script>
+  <script src="{% static 'bookstore/js/bootstrap.min.js' %}"></script>
+  <script src="{% static 'bookstore/js/underscore.min.js' %}"></script>
+  <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+  <script src="{% static 'bookstore/js/ie10-viewport-bug-workaround.js' %}"></script>
+
   <div class="blog-masthead">
-      <div class="container">
-        <nav class="blog-nav">
-          <a class="blog-nav-item active" href="#">Online Bookstore</a>
-          <a class="blog-nav-item pull-right" href="#">Welcome! {{username}}</a>
-          <a class="blog-nav-item pull-right" href="#">My Order Records</a>
-        </nav>
-      </div>
+    <div class="container">
+      <nav class="blog-nav">
+        <a class="blog-nav-item active" href="#">Online Bookstore</a>
+        <a class="blog-nav-item pull-right" href="#">Welcome! {{username}}</a>
+        <a class="blog-nav-item pull-right" href="#">My Order Records</a>
+      </nav>
     </div>
+  </div>
+</head>
 
-<!-- Libraries -->
-<script src="{% static 'bookstore/js/angular.min.js' %}"></script>
-<script src="{% static 'bookstore/js/ui-bootstrap-tpls-0.11.2.min.js' %}"></script>
-<script src="{% static 'bookstore/js/angular-route.min.js' %}"></script>
-<script src="{% static 'bookstore/js/angular-animate.min.js' %}"></script>
-
-<!-- AngularJS custom codes -->
-<script src="{% static 'bookstore/app/app.js' %}"></script>
-<!-- <script src="{% static 'bookstore/app/data.js' %}"></script> -->
-<!-- <script src="{% static 'bookstore/app/directives.js' %}"></script> -->
-
-<!-- Some Bootstrap Helper Libraries -->
-
-<script src="{% static 'bookstore/js/jquery.min.js' %}"></script>
-<script src="{% static 'bookstore/js/bootstrap.min.js' %}"></script>
-<script src="{% static 'bookstore/js/underscore.min.js' %}"></script>
-<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-<script src="{% static 'bookstore/js/ie10-viewport-bug-workaround.js' %}"></script>
-
-<div class="container">
+<body ng-app="{% block ng_app %}myApp{% endblock %}">
+<div class="container" ng-controller="{% block ng_controller %}AppController{% endblock %}">
     <div class="page-content">
       <div>
         <h4 class="blog-post-title">Books</h4>
@@ -56,7 +55,7 @@
           </div>
           </div>
           <div class="panel-body">
-          {% if book_list %}
+          {% if bookt_list %}
               <table class="table table-striped">
               <tr>
                 <th>ISBN</th>
@@ -68,7 +67,7 @@
               </tr>
               <!-- {% for c in book_list %} -->
               {% verbatim %}
-              <tr ng-repeat="c in book_list">
+              <tr ng-repeat="c in {{book_list}}">
                   <td>{{c.ISBN}}</td>
                   <td>{{c.title}}</td>
                   <td>{{c.price}}</td>
