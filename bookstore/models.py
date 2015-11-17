@@ -43,6 +43,8 @@ class Opinion(models.Model):
         return self.customer.full_name + " : " + self.book.title
 
 
+		
+
 
 
 	

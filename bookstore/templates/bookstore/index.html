@@ -66,15 +66,23 @@
                 <th>Format</th>
                 <th>Author</th>
                 <th>Publisher</th>
+                <th>Subject</th>
+                <th>Keywords</th>
+                <th>Publication Year</th>
               </tr>
               <tr ng-repeat="c in book_list| filter:filterBook ">
                   <td>{$c.ISBN$}</td>
-                  <td>{$c.title$}</td>
+                  <td><a data-toggle="modal" data-target="#BookDetailModal">{$c.title$}</a></td>
                   <td>{$c.price$}</td>
                   <td>{$c.copies$}</td>
                   <td>{$c.format$}</td>
                   <td>{$c.author$}</td>
                   <td>{$c.publisher$}</td>
+                  <td>{$c.subject$}</td>
+                  <td>{$c.keywords$}</td>
+                  <td>{$c.year_of_publication$}</td>
+                  <td><a data-toggle="modal" data-target="#FeedbackModal">add</a></td>
+                  <td><a data-toggle="modal" data-target="#FeedbackModal">review</a></td>
               </tr>
               </table>
 
@@ -86,6 +94,44 @@
         </div>
       </div>
     </div>
+</div>
+
+<div id="BookDetailModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Book{$$}</h4>
+        </div>
+            <div  class="modal-body">
+            
+            </div>
+            <div class="modal-footer">   
+                <button class="btn btn-default">Cancel</button>
+                 <button class="btn btn-default">Ok</button>
+            </div>
+    </div>
+  </div>
+</div>
+
+
+<div id="FeedbackModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">My Feedback for {$$}</h4>
+        </div>
+        
+            <div  class="modal-body">
+            
+            </div>
+            <div class="modal-footer">   
+                 <button class="btn btn-default">Cancel</button>
+                 <button class="btn btn-default">Ok</button>
+            </div>
+    </div>
+  </div>
 </div>
 
 </body>
