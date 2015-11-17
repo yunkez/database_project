@@ -1,7 +1,7 @@
 {% load staticfiles %}
 
-<html ng-app="myApp">
-<body ng-cloak="">
+<html ng-app="{% block ng_app %}myApp{% endblock %}">
+<body ng-controller="{% block ng_controller %}AppController{% endblock %}">
   <title>Online Bookstore Application</title>
   <link rel="stylesheet" href="{% static 'bookstore/css/bootstrap.min.css' %}" type="text/css" />
   <link rel="stylesheet" href="{% static 'bookstore/css/custom.css' %}" type="text/css" />
@@ -13,7 +13,6 @@
           <a class="blog-nav-item active" href="#">Online Bookstore</a>
           <a class="blog-nav-item pull-right" href="#">Welcome! {{username}}</a>
           <a class="blog-nav-item pull-right" href="#">My Order Records</a>
-          <a class="blog-nav-item pull-right" href="#">logout</a>
         </nav>
       </div>
     </div>
@@ -26,9 +25,8 @@
 
 <!-- AngularJS custom codes -->
 <script src="{% static 'bookstore/app/app.js' %}"></script>
-<script src="{% static 'bookstore/app/data.js' %}"></script>
-<script src="{% static 'bookstore/app/directives.js' %}"></script>
-<script src="{% static 'bookstore/app/productsCtrl.js' %}"></script>
+<!-- <script src="{% static 'bookstore/app/data.js' %}"></script> -->
+<!-- <script src="{% static 'bookstore/app/directives.js' %}"></script> -->
 
 <!-- Some Bootstrap Helper Libraries -->
 
@@ -42,32 +40,44 @@
     <div class="page-content">
       <div>
         <h4 class="blog-post-title">Books</h4>
+        <span>Following books are available for ordering</span>
         <hr/>
 
         <div class="table-responsive">
         <div class="panel panel-primary">
-          <div class="panel-heading">List of Books</div>
+          <div class="panel-heading">List of Books
+           <div class="sw-search">
+              <div class="nav-search" id="nav-search">
+                      Search: <span class="input-icon">
+                          <input placeholder="Search books here ..." class="nav-search-input" ng-model="filterBook" autocomplete="off" type="text" style="width:300px;" focus>
+                          <i class="search-icon fa fa-search nav-search-icon"></i>
+                      </span>
+              </div>
+          </div>
+          </div>
           <div class="panel-body">
           {% if book_list %}
               <table class="table table-striped">
               <tr>
                 <th>ISBN</th>
                 <th>Title</th>
-                          <th>Price</th>
-                          <th>Copies</th>
-                          <th>Format</th>
-                          <th>Author</th>
+                <th>Price</th>
+                <th>Copies</th>
+                <th>Format</th>
+                <th>Author</th>
               </tr>
-              {% for c in book_list %}
-                      <tr>
-                          <td>{{c.ISBN}}</td>
-                          <td>{{c.title}}</td>
-                          <td>{{c.price}}</td>
-                          <td>{{c.copies}}</td>
-                          <td>{{c.format}}</td>
-                          <td>{{c.author}}</td>
-                      </tr>
-              {% endfor %}
+              <!-- {% for c in book_list %} -->
+              {% verbatim %}
+              <tr ng-repeat="c in book_list">
+                  <td>{{c.ISBN}}</td>
+                  <td>{{c.title}}</td>
+                  <td>{{c.price}}</td>
+                  <td>{{c.copies}}</td>
+                  <td>{{c.format}}</td>
+                  <td>{{c.author}}</td>
+              </tr>
+              {% endverbatim %}
+              <!-- {% endfor %} -->
               </table>
           {% else %}
               <p><i class="fa fa-ban fa-3x"></i>&nbsp;No data found</p>

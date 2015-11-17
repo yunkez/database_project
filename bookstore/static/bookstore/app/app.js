@@ -1,15 +1,5 @@
-var app = angular.module('myApp', ['ngRoute', 'ui.bootstrap', 'ngAnimate']);
+app = angular.module('myApp', [])
 
-app.config(['$routeProvider',
-  function($routeProvider) {
-    $routeProvider.
-    when('/', {
-      title: 'Products',
-      templateUrl: 'partials/products.html',
-      controller: 'productsCtrl'
-    })
-    .otherwise({
-      redirectTo: '/'
-    });;
-}]);
-    
+app.controller( 'AppController', ['$scope', '$http', function($scope, $http) {
+    $scope.test = "abc";
+}])
