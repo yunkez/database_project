@@ -27,7 +27,8 @@
     <div class="container">
       <nav class="blog-nav">
         <a class="blog-nav-item active" href="#">Online Bookstore</a>
-        <a class="blog-nav-item pull-right" href="#">Welcome! {{username}}</a>
+        <a class="blog-nav-item pull-right" href="logout">Logout</a>
+        <a class="blog-nav-item pull-right" href="#">Welcome! {{user.email}}</a>
         <a class="blog-nav-item pull-right" href="#">My Order Records</a>
       </nav>
     </div>
@@ -73,7 +74,7 @@
                   <td>{$c.copies$}</td>
                   <td>{$c.format$}</td>
                   <td>{$c.author$}</td>
-                  <td>{$c.publisher}</td>
+                  <td>{$c.publisher$}</td>
               </tr>
               </table>
 

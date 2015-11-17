@@ -3,18 +3,16 @@ from django.http import HttpResponse
 from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
 from django.core.context_processors import csrf
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from .models import Book,Customer
 from .serializers import BookSerializer
 
-
 @login_required(login_url='/login/')
 def index(request):
 	book_list = Book.objects.order_by('title')
-	current_user = Customer.objects.order_by("full_name")[0]
-	context = {'book_list': book_list, 'username': current_user.full_name,}
+	context = {'book_list': book_list, 'user': request.user,}
 	return render(request, 'bookstore/index.html', context)
 
 def book_list(request):
@@ -64,9 +62,12 @@ def user_exists(username):
         return False
     return True
 
-@login_required(login_url='/login/')
-def secured(request):
-    return render_to_response("bookstore/index.html")
+def logoutView(request, onsuccess='/login', onfail='/bookstore'):
+    if request.user.is_authenticated():
+        logout(request)
+        return redirect(onsuccess)
+    else:
+        return redirect(onfail)
 
 class JSONResponse(HttpResponse):
     def __init__(self, data, **kwargs):
