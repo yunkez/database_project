@@ -35,7 +35,7 @@ def loginview(request):
     return render_to_response('bookstore/login.html', c)
 
 def auth_and_login(request, onsuccess='/bookstore', onfail='/login'):
-    user = authenticate(username=request.POST['email'], password=request.POST['password'])
+    user = authenticate(username=request.POST['username'], password=request.POST['password'])
     if user is not None:
         login(request, user)
         return redirect(onsuccess)
@@ -44,8 +44,8 @@ def auth_and_login(request, onsuccess='/bookstore', onfail='/login'):
 
 def sign_up_in(request):
     post = request.POST
-    if not user_exists(post['email']): 
-        user = create_user(username=post['email'], email=post['email'], password=post['password'])
+    if not user_exists(post['username']): 
+        user = create_user(username=post['username'], email=post['username'], password=post['password'])
         return auth_and_login(request)
     else:
         return redirect("/bookstore/login")
