@@ -42,9 +42,9 @@ def user_login(request):
                 login(request, user)
                 return HttpResponseRedirect('/bookstore')
             else:
-                return HttpResponse("Your Rango account is disabled.")
+                return HttpResponse("Your account is disabled.")
         else:
-            return HttpResponse("Invalid login details supplied.")
+            return HttpResponse("You have entered wrong username or password.")
     else:
         return render_to_response('bookstore/login.html', {}, context)
 
