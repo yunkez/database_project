@@ -2,7 +2,7 @@ from django.contrib.auth.forms import UserCreationForm, UserChangeForm, ReadOnly
 from .models import Customer
 from django import forms
 
-class CustomerCreationForm(UserCreationForm):
+class CustomerCreationForm(forms.ModelForm):
 	password1 = forms.CharField(label="Password", widget=forms.PasswordInput)
 	password2 = forms.CharField(label="Confirm your password",widget=forms.PasswordInput)
 
@@ -18,13 +18,13 @@ class CustomerCreationForm(UserCreationForm):
 		return password2
 
 	def save(self, commit=True):
-	    user = super(CustomerCreationForm  , self).save(commit=False)
+	    user = super(CustomerCreationForm, self).save(commit=False)
 	    user.set_password(self.cleaned_data["password1"])
 	    if commit:
 	        user.save()
 	    return user
 
-class CustomerChangeForm(UserChangeForm): 
+class CustomerChangeForm(forms.ModelForm): 
     password = ReadOnlyPasswordHashField(label="Password")
 
     class Meta:

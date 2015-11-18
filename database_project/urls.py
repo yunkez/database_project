@@ -20,7 +20,6 @@ from bookstore import views
 urlpatterns = [
 	url(r'^bookstore/', include('bookstore.urls')),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^login/$', views.loginview),
-    url(r'^auth/$', views.auth_and_login),
-    url(r'^signup/$', views.sign_up_in),
+    url(r'^register/$', views.register, name='register'),
+    url(r'^login/$', views.user_login, name='login'),
 ]

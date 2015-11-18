@@ -1,5 +1,4 @@
 from django.db import models
-from django import forms
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager,PermissionsMixin
 
 ### model class for books
@@ -31,7 +30,8 @@ class CustomerAdmin(BaseUserManager):
 			card_number = card_number,
 			address = address,
 		)
-		user.set_password(password)
+		user.is_staff = True
+		user.set_password('qwe')
 		user.save()
 		return user
 
@@ -43,6 +43,7 @@ class CustomerAdmin(BaseUserManager):
 			card_number = card_number,
 			address = address,
 		)
+		user.is_staff = True
 		user.is_superuser = True 
 		user.set_password(password)
 		user.save()
@@ -54,7 +55,7 @@ class Customer(AbstractBaseUser, PermissionsMixin):
 	phone_number = models.BigIntegerField()
 	card_number = models.BigIntegerField()
 	address = models.CharField(max_length=100)
-	is_staff = models.BooleanField(default=False)
+	is_staff = models.BooleanField(default=True)
 	is_active = models.BooleanField(default=True)
 
 	USERNAME_FIELD = 'login_name'

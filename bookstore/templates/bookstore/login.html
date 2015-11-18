@@ -4,16 +4,16 @@
 
 {% block content %}
 
-<form action="/auth/" method="POST"> {% csrf_token %}
+<form action="/login/" method="POST" id="login_form"> {% csrf_token %}
     <div class="form-group" data-role="fieldcontain">
         <label for="username">Username:</label>
-        <input class="form-control" type="username" name="username" id="username" value="" />
+        <input class="form-control" type="text" name="username" id="username" value="" />
     </div>
     <div class="form-group" data-role="fieldcontain">
         <label for="password">Password:</label>
         <input class="form-control" type="password" name="password" id="password" value="" />
     </div>    
-    <button class="btn btn-primary" type="submit" name="submit" value="submit-value">Sign in</button>
+    <button class="btn btn-primary" type="submit" name="submit" value="submit">Sign in</button>
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#signupModal">Register</button>
 </form>
 
@@ -46,3 +46,28 @@
 
 
 {% endblock %}
+
+
+
+
+
+<!DOCTYPE html>
+<html>
+
+    <body>
+        <h1>Login to Rango</h1>
+
+        <form id="login_form" method="post" action="/login/">
+            {% csrf_token %}
+            Username: <input type="text" name="username" value="" size="50" />
+            <br />
+            Password: <input type="password" name="password" value="" size="50" />
+            <br />
+
+            <input type="submit" value="submit" />
+        </form>
+
+        <a href="/register/">Register Here</a>
+
+    </body>
+</html>
