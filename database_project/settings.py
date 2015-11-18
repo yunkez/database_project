@@ -40,6 +40,8 @@ INSTALLED_APPS = (
 	'bookstore',
 )
 
+AUTH_USER_MODEL = 'bookstore.Customer'
+
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',

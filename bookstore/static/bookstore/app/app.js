@@ -13,33 +13,25 @@ app.controller( 'AppController', ['$scope','$modal', '$http', function($scope,$m
     $scope.openBookModal = function(book){
     	var modalInstance = $modal.open({
             templateUrl: 'BookDetailModal.html',
-            controller: 'BookDetailModalCtrl',
+            controller: 'ModalCtrl',
             resolve: {
                 params: function () {
                     return book;
                 }
             }
-        });
-        modalInstance.result.then(
-			function (result) {
-				
-			},
-			function (result) {
-			}
-		);
-
+    	})
     };
 
 
 }]);
 
-app.controller('BookDetailModalCtrl', ['$scope', '$modalInstance', 'params', function($scope, $modalInstance, params){
+app.controller('ModalCtrl', ['$scope', '$modalInstance', 'params', function($scope, $modalInstance, params){
 	$scope.c = params;
 	$scope.ok = function () {
-        $modalInstance.close('this is result for close');
+        $modalInstance.close();
     };
 
     $scope.cancel = function () {
-        $modalInstance.dismiss('this is result for dismiss');
+        $modalInstance.dismiss();
     };
 }]);

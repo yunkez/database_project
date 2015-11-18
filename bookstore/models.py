@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager,PermissionsMixin
 
 ### model class for books
 class Book(models.Model):
@@ -21,23 +21,65 @@ class Book(models.Model):
 	def __unicode__(self):
 		return self.title
 
-class Customer(AbstractBaseUser):
-	login_name = models.CharField(max_length=100, unique=True, blank=False)
-	full_name = models.CharField(max_length=100, blank=False)
-	phone_number = models.BigIntegerField(blank=False)
-	card_number = models.BigIntegerField(blank=False)
-	address = models.CharField(max_length=100,blank=False)
+class CustomerAdmin(BaseUserManager):
+	def create_user(self,login_name,password,full_name,phone_number,card_number,address):
+		user = self.model(
+			login_name = login_name,
+			full_name = full_name,
+			phone_number = phone_number,
+			card_number = card_number,
+			address = address,
+		)
+		user.is_staff = True
+		user.set_password(password)
+		user.save()
+		return user
+
+	def create_superuser(self,login_name,password,full_name,phone_number,card_number,address):
+		user = self.model(
+			login_name = login_name,
+			full_name = full_name,
+			phone_number = phone_number,
+			card_number = card_number,
+			address = address,
+		)
+		user.is_staff = True
+		user.is_superuser = True 
+		user.set_password(password)
+		user.save()
+		return user
+
+class Customer(AbstractBaseUser, PermissionsMixin):
+	login_name = models.CharField(max_length=100, unique=True)
+	full_name = models.CharField(max_length=100)
+	phone_number = models.BigIntegerField()
+	card_number = models.BigIntegerField()
+	address = models.CharField(max_length=100)
+	is_staff = models.BooleanField(default=False)
+	is_active = models.BooleanField(default=True)
+
 	USERNAME_FIELD = 'login_name'
+	REQUIRED_FIELDS = ['full_name','phone_number','card_number','address']
+	objects = CustomerAdmin()
+
 	def __unicode__(self):
+	    return self.full_name
+
+	def get_full_name(self):
 		return self.full_name
+
+	def get_short_name(self):
+		return self.full_name
+
+
 
 class Opinion(models.Model):
     customer = models.ForeignKey(Customer)
     book = models.ForeignKey(Book)
     text = models.TextField()
     score = models.IntegerField(
-        choices=((1, '1'),(2, '2'),(3, '3'),(4, '4'),(5, '5'),(6, '6'),(7, '7'),(8, '8'),(9, '9'),(10, '10'),
-       	))
+        choices=((1, '1'),(2, '2'),(3, '3'),(4, '4'),(5, '5'),(6, '6'),(7, '7'),(8, '8'),(9, '9'),(10, '10')
+    ))
 
     def __unicode__(self):
         return self.customer.full_name + " : " + self.book.title

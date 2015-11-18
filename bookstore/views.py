@@ -48,7 +48,7 @@ def sign_up_in(request):
         user = create_user(username=post['email'], email=post['email'], password=post['password'])
         return auth_and_login(request)
     else:
-        return redirect("bookstore/login/")
+        return redirect("/bookstore/login")
 
 def create_user(username, email, password):
     user = User(username=username, email=email)
