@@ -70,13 +70,30 @@ class Customer(AbstractBaseUser, PermissionsMixin):
         return self.fullname
 
 
-class Opinion(models.Model):
+class Feedback(models.Model):
     customer = models.ForeignKey(Customer)
     book = models.ForeignKey(Book)
     text = models.TextField()
     score = models.IntegerField(
-        choices=((1, '1'),(2, '2'),(3, '3'),(4, '4'),(5, '5'),(6, '6'),(7, '7'),(8, '8'),(9, '9'),(10, '10')
+        choices=((0, '0'),(1, '1'),(2, '2'),(3, '3'),(4, '4'),(5, '5'),(6, '6'),(7, '7'),(8, '8'),(9, '9'),(10, '10')
     ))
 
     def __unicode__(self):
-        return self.customer.full_name + " : " + self.book.title
+        return self.customer.fullname + " : " + self.book.title
+
+class Order(models.Model):
+    order_date = models.DateField(auto_now_add = True)
+    order_status = models.CharField(max_length=9,
+        choices = (('submitted', 'submitted'),('executed', 'executed'),))
+    book = models.ForeignKey(Book)
+    customer = models.ForeignKey(Customer)
+    def __unicode__(self):
+        return u'%s orders %s on %s' %(self.customer.fullname, self.book.title, self.order_date)
+
+class Rating(models.Model):
+    rater = models.ForeignKey(Customer)
+    feedback = models.ForeignKey(Feedback)
+    rate = models.PositiveIntegerField()
+    def __unicode__(self):
+        return u'%s rates %s for feedback of %s on %s' %(self.rater.fullname, self.feedback.customer.fullname, self.feedback.book.title)
+
