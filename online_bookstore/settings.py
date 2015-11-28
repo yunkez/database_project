@@ -37,8 +37,9 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'bookstore',
+    'bookstore'
 )
+AUTH_USER_MODEL = 'bookstore.Customer'
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -78,7 +79,7 @@ WSGI_APPLICATION = 'online_bookstore.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'bookstore',
+        'NAME': 'bookstore1',
         'USER':'root',
         'PASSWORD':'',
     }

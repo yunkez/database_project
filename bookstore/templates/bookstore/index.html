@@ -1,0 +1,136 @@
+{% load staticfiles %}
+
+<html>
+<head>
+  <title>Online Bookstore Application</title>
+  <link rel="stylesheet" href="{% static 'bookstore/css/bootstrap.min.css' %}" type="text/css" />
+  <link rel="stylesheet" href="{% static 'bookstore/css/custom.css' %}" type="text/css" />
+  <link rel="stylesheet" href="{% static 'bookstore/css/font-awesome.min.css' %}" type="text/css" />
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+  <!-- Libraries -->
+  <script src="{% static 'bookstore/js/angular.min.js' %}"></script>
+  <script src="{% static 'bookstore/js/ui-bootstrap-tpls-0.11.2.min.js' %}"></script>
+  <script src="{% static 'bookstore/js/angular-route.min.js' %}"></script>
+  <script src="{% static 'bookstore/js/angular-animate.min.js' %}"></script>
+
+  <!-- AngularJS custom codes -->
+  <script src="{% static 'bookstore/app/app.js' %}"></script>
+  <script src="{% static 'bookstore/app/directives.js' %}"></script>
+  <!-- Some Bootstrap Helper Libraries -->
+  <script src="{% static 'bookstore/js/jquery.min.js' %}"></script>
+  <script src="{% static 'bookstore/js/bootstrap.min.js' %}"></script>
+  <script src="{% static 'bookstore/js/underscore.min.js' %}"></script>
+  <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+  <script src="{% static 'bookstore/js/ie10-viewport-bug-workaround.js' %}"></script>
+
+  <div class="blog-masthead">
+    <div class="container">
+      <nav class="blog-nav">
+        <a class="blog-nav-item active" href="#">Online Bookstore</a>
+        <a class="blog-nav-item pull-right" href="logout">Logout</a>
+        <a class="blog-nav-item pull-right" href="#">Welcome, {{user.full_name}}</a>
+        <a class="blog-nav-item pull-right" href="#">My Order Records</a>
+      </nav>
+    </div>
+  </div>
+</head>
+
+<body ng-app="{% block ng_app %}myApp{% endblock %}">
+<div class="container" ng-controller="{% block ng_controller %}AppController{% endblock %}">
+    <div class="page-content">
+      <div>
+        <h4 class="blog-post-title">Books</h4>
+        <span>Following books are available for ordering</span>
+        <hr/>
+
+        <div class="table-responsive">
+        <div class="panel panel-primary">
+          <div class="panel-heading">List of Books
+           <div class="sw-search">
+              <div class="nav-search" id="nav-search">
+                      Search: <span class="input-icon">
+                          <input placeholder="Search books here ..." class="nav-search-input" ng-model="filterBook" autocomplete="off" type="text" style="width:300px;" focus>
+                          <i class="search-icon fa fa-search nav-search-icon"></i>
+                      </span>
+              </div>
+          </div>
+          </div>
+          <div class="panel-body">
+          {% if book_list %}
+              <table class="table table-striped">
+              <tr>
+                <th>ISBN</th>
+                <th>Title</th>
+                <th>Price</th>
+                <th>Author</th>
+                <th>Subject</th>
+                <th>Action</th>
+                <th>Feedback</th>
+              </tr>
+              <tr ng-repeat="c in book_list| filter:filterBook ">
+                  <td>{$c.ISBN$}</td>
+                  <td><a ng-click="openBookModal(c)">{$c.title$}</a></td>
+                  <td>{$c.price$}</td>
+                  <td>{$c.author$}</td>
+                  <td>{$c.subject$}</td>
+                  <td><a data-toggle="modal" data-target="#FeedbackModal">add</a></td>
+                  <td><a data-toggle="modal" data-target="#FeedbackModal">review</a></td>
+              </tr>
+              </table>
+
+          {% else %}
+              <p><i class="fa fa-ban fa-3x"></i>&nbsp;No data found</p>
+          {% endif %}
+        </div>
+        </div>
+        </div>
+      </div>
+    </div>
+</div>
+
+<script type="text/ng-template" id="BookDetailModal.html">
+  <div class="modal-header">
+      <h4 class="modal-title">{$c.title$}</h4>
+      <a ng-click="">add</a>
+      <a ng-click="">review</a>
+  </div>
+  <div class="modal-body">
+  <form>
+    <div class="form-class"><label>ISBN: </label><label>{$c.ISBN$}</label></div>
+    <div class="form-class"><label>Author: </label><label>{$c.author$}</label></div>
+    <div class="form-class"><label>Publisher: </label><label>{$c.publisher$}</label></div>
+    <div class="form-class"><label>Format: </label><label>{$c.format$}</label></div>
+    <div class="form-class"><label>Subject: </label><label>{$c.subject$}</label></div>
+    <div class="form-class"><label>Keywords: </label><label>{$c.keywords$}</label></div>
+    <div class="form-class"><label>Publication Year: </label><label>{$c.year_of_publication$}</label></div>
+    <div class="form-class"><label>price: </label><label>{$c.price$}</label></div>
+    <div class="form-class"><label>copies: </label><label>{$c.copies$}</label></div>
+  </form>
+  </div>
+  <div class="modal-footer">
+      <button class="btn btn-primary" ng-click="ok()">OK</button>
+      <button class="btn btn-primary" ng-click="cancel()">Cancel</button>
+  </div>
+</script>
+
+<div id="FeedbackModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">My Feedback for {$$}</h4>
+        </div>
+        
+            <div  class="modal-body">
+            
+            </div>
+            <div class="modal-footer">   
+                 <button class="btn btn-default">Cancel</button>
+                 <button class="btn btn-default">Ok</button>
+            </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
