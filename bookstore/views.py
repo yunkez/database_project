@@ -13,8 +13,15 @@ from django.db import connection
 
 @login_required(login_url='/login')
 def index(request):
-	context = RequestContext(request)
-	return render_to_response('bookstore/index.html', {}, context)
+    book_list = ""
+    try:
+        cur = connection.cursor()
+        cur.execute("select * from bookstore_book")
+        columns = [col[0] for col in cur.description]
+        book_list = [dict(zip(columns, row)) for row in cur.fetchall()]
+    except:
+        book_list = ""
+    return render(request, 'bookstore/index.html',{'book_list': book_list,'login': True})
 
 def user_login(request):
     context = RequestContext(request)
@@ -31,7 +38,7 @@ def user_login(request):
         else:
             return HttpResponse("You have entered wrong username or password.")
     else:
-        return render_to_response('bookstore/login.html', {}, context)
+        return render_to_response('bookstore/login.html', {'login':False}, context)
 
 def register(request):
     context = RequestContext(request)
@@ -56,7 +63,7 @@ def register(request):
             print user_form.errors
     else:
         user_form = CustomerCreationForm()
-    return render_to_response('bookstore/signup.html',{'user_form': user_form, 'registered': registered},context)
+    return render_to_response('bookstore/signup.html',{'user_form': user_form, 'registered': registered,'login': False},context)
 
 def logoutView(request, onsuccess='/login', onfail='/bookstore'):
     if request.user.is_authenticated():
