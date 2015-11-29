@@ -102,14 +102,12 @@ def order(request):
         order_list = ast.literal_eval(order_list)
         for order in order_list:
             ISBN = order['ISBN']
-            copies = order['count']
-            title = order['title']           
+            copies = order['count']       
             try:
                 cur.execute("UPDATE bookstore_order SET order_status='submitted' WHERE book_id='%s' AND customer_id='%s'AND order_status='AddToCart'"%(ISBN,username))
-                info = "You have ordered "+title+" successfully."
             except Book.DoesNotExist:
                 info = "Please enter a valid ISBN."
-    return HttpResponse(info)
+        return render(request, 'bookstore/finish.html',{'base_template':'base_auth.html'})
 
 def shoppingcart(request):
     cart_list = ""
@@ -131,6 +129,9 @@ def shoppingcart(request):
         cur.execute("UPDATE bookstore_book SET copies='%d' WHERE ISBN='%s'"%(avail+count,ISBN))
         return HttpResponseRedirect('/bookstore/shoppingcart')
     return render(request,'bookstore/shopping_cart.html',{'cart_list': cart_list,'base_template':'base_auth.html'})
+
+def orderRecords(request):
+    return render(request, 'bookstore/order_record.html',{'base_template':'base_auth.html'})
 
 
 
