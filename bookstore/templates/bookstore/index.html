@@ -88,7 +88,7 @@
       </span>
     </p>
   <button class="btn btn-s btn-warning pull-right">Add to Cart</button>
-  <button class="btn btn-s btn-success pull-right" data-toggle="modal" data-target="#OrderModal" data-booktitle="{{book.title}}">Order</button>
+  <button class="btn btn-s btn-success pull-right" data-toggle="modal" data-target="#OrderModal" data-booktitle="{{book.title}}" data-bookisbn="{{book.ISBN}}">Order</button>
   <p class="list-group-item-text">Published by {{book.publisher}} in {{book.year_of_publication}}</p>
   <p class="list-group-item-text">Subject: {{book.subject}}</p>
 
@@ -106,8 +106,13 @@
       <p></p>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Confirm</button>
+      	<form action="/bookstore/order/" method="POST" id="orderForm"> {% csrf_token %}
+      		<input type="hidden" id="order_isbn" name="order_isbn">
+      		<input type="hidden" id="order_title" name="order_title">
+      		<input type="hidden" id="order_copies" name="order_copies" value="1">
+        	<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        	<button type="submit" class="btn btn-primary" name="order">Confirm</button>
+        </form>
       </div>
     </div>
   </div>
@@ -119,6 +124,9 @@ $('#OrderModal').on('show.bs.modal', function (event) {
   var book_title = button.data('booktitle') 
   var modal = $(this)
   modal.find('.modal-body p').text('Place Order for '+ book_title+ '?')
+  document.getElementById("order_isbn").value=button.data('bookisbn') 
+  document.getElementById("order_title").value=book_title
 });
+
 </script>
 {% endblock %}

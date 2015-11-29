@@ -8,6 +8,7 @@ from django.contrib.auth.models import User
 from .models import Book,Customer
 from .forms import CustomerCreationForm
 from django.db import connection
+import datetime
 
 @login_required(login_url='/login')
 def index(request):
@@ -51,7 +52,7 @@ def register(request):
             phone = request.POST['phone']
             card = request.POST['card']
             address = request.POST['address']
-            sql = "insert into bookstore_customer values('password',null,'0','%s','%s','%s','%s','%s','1','1');"%(username,fullname,phone,card,address)
+            sql = "INSERT INTO bookstore_customer VALUES('password',NULL,'0','%s','%s','%s','%s','%s','1','1');"%(username,fullname,phone,card,address)
             cur.execute(sql) 
             u = Customer.objects.get(username=username)
             u.set_password("%s"% password)
@@ -69,3 +70,30 @@ def logoutView(request, onsuccess='/login', onfail='/bookstore'):
         return redirect(onsuccess)
     else:
         return redirect(onfail)
+
+def order(request):
+    context = RequestContext(request)
+    info = "Sorry, your request is invalid."
+    if request.method == 'POST':
+        ISBN = request.POST['order_isbn']
+        title = request.POST['order_title']
+        copies = int(request.POST['order_copies'])
+        cur = connection.cursor()
+        try:
+            cur.execute("SELECT copies FROM bookstore_book WHERE ISBN = '%s'"%(ISBN))
+            avail = int(cur.fetchone()[0])  
+            if avail > 0:
+                username = request.user.username
+                now=datetime.datetime.now()
+                date="%s/%s/%s" % (now.day, now.month, now.year) 
+                cur.execute("INSERT INTO bookstore_order VALUES('3','%s','%s','%s','submitted')"%(username,ISBN,date))
+                cur.execute("UPDATE bookstore_book SET copies='%d' WHERE ISBN='%s'"%(avail-copies,ISBN))
+                info = "You have ordered "+title+" successfully."
+            else:
+                info = "Sorry, "+title+" is currently out of stock."
+        except Book.DoesNotExist:
+            info = "Please enter a valid ISBN."
+    return HttpResponse(info)
+
+
+
