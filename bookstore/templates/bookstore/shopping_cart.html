@@ -1,0 +1,31 @@
+{% extends base_template %}
+
+{% block title %}Books{% endblock %}
+
+{% block content %}
+<h3>My Shopping Cart</h3>
+
+<div class="list-group">
+	<form action="/bookstore/shoppingcart/" method="POST" id="ShoppingcartForm"> {% csrf_token %}
+	{% for book in cart_list %}
+	<a href="#" class="list-group-item bs-callout-warning">
+  		<h4 class="list-group-item-heading">{{book.title}}</h4>
+  		<h5 class="list-group-item-heading">By {{book.author}}</h5>
+  		<p> {{book.count}} </p>
+  		<input type="hidden" id="delete_isbn" name="delete_isbn" value="{{book.ISBN}}"></input>
+  		<input type="hidden" id="delete_count" name="delete_count" value="{{book.count}}"></input>
+  		<button type="delete" class="btn btn-s btn-warning pull-right" name="delete">Delete</button>
+	</a>
+	{% endfor %}
+	</form>
+	<form action="/bookstore/order/" method="POST" id="ShoppingcartBuyForm"> {% csrf_token %}
+		<input type="hidden" id="order_list" name="order_list" value="{{cart_list}}"></input>
+		<button type="submit" class="btn btn-primary" id="order" name="order">Buy</button>
+	</form>
+</div>
+
+
+<script type="text/javascript">
+
+</script>
+{% endblock %}

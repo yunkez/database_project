@@ -87,8 +87,8 @@
         <label for="rating1">1</label>
       </span>
     </p>
-  <button class="btn btn-s btn-warning pull-right">Add to Cart</button>
-  <button class="btn btn-s btn-success pull-right" data-toggle="modal" data-target="#OrderModal" data-booktitle="{{book.title}}" data-bookisbn="{{book.ISBN}}">Order</button>
+  <button class="btn btn-s btn-warning pull-right" data-toggle="modal" data-target="#ShoppingcartModal" data-booktitle="{{book.title}}" data-bookisbn="{{book.ISBN}}" data-bookcopies="{{book.copies}}">Add to Cart</button>
+<!--   <button class="btn btn-s btn-success pull-right" data-toggle="modal" data-target="#OrderModal" data-booktitle="{{book.title}}" data-bookisbn="{{book.ISBN}}">Order</button> -->
   <p class="list-group-item-text">Published by {{book.publisher}} in {{book.year_of_publication}}</p>
   <p class="list-group-item-text">Subject: {{book.subject}}</p>
 
@@ -96,7 +96,7 @@
 {% endfor %}
 </div>
 
-<div class="modal fade" id="OrderModal" tabindex="-1" role="dialog" aria-labelledby="OrderModalLabel">
+<!-- <div class="modal fade" id="OrderModal" tabindex="-1" role="dialog" aria-labelledby="OrderModalLabel">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -116,17 +116,51 @@
       </div>
     </div>
   </div>
+</div> -->
+
+<div class="modal fade" id="ShoppingcartModal" tabindex="-1" role="dialog" aria-labelledby="ShoppingcartModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="ShoppingcartModalLabel"></h4>
+      </div>
+      <form action="/bookstore/" method="POST" id="ShoppingcartForm"> {% csrf_token %}
+      	<div class="modal-body">
+      		<input id="cart_copies" name="cart_copies" value=""></input>
+      		<p id="modalavail"></p>
+      	</div>
+     	<div class="modal-footer">
+      		<input type="hidden" id="cart_isbn" name="cart_isbn"></input>
+      		<input type="hidden" id="cart_title" name="cart_title"></input>
+        	<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        	<button type="submit" class="btn btn-primary" name="order">Confirm</button>
+      	</div>
+      </form>
+    </div>
+  </div>
 </div>
 
 <script type="text/javascript">
-$('#OrderModal').on('show.bs.modal', function (event) {
+// $('#OrderModal').on('show.bs.modal', function (event) {
+//   var button = $(event.relatedTarget) 
+//   var book_title = button.data('booktitle') 
+//   var book_isbn = button.data('bookisbn') 
+//   var modal = $(this)
+//   modal.find('.modal-body p').text('Place Order for '+ book_title+ '?')
+//   document.getElementById("order_isbn").value=book_isbn
+//   document.getElementById("order_title").value=book_title
+// });
+
+$('#ShoppingcartModal').on('show.bs.modal', function (event) {
   var button = $(event.relatedTarget) 
   var book_title = button.data('booktitle') 
   var book_isbn = button.data('bookisbn') 
+  var book_copies = button.data('bookcopies') 
   var modal = $(this)
-  modal.find('.modal-body p').text('Place Order for '+ book_title+ '?')
-  document.getElementById("order_isbn").value=book_isbn
-  document.getElementById("order_title").value=book_title
+  modal.find('#ShoppingcartModalLabel').text('Add '+ book_title+ ' to shopping cart?')
+  modal.find('#modalavail').text('Available copies: '+ book_copies)
+  document.getElementById("cart_isbn").value=book_isbn
+  document.getElementById("cart_title").value=book_title
 });
 
 </script>
