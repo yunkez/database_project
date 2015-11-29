@@ -122,9 +122,10 @@
 $('#OrderModal').on('show.bs.modal', function (event) {
   var button = $(event.relatedTarget) 
   var book_title = button.data('booktitle') 
+  var book_isbn = button.data('bookisbn') 
   var modal = $(this)
   modal.find('.modal-body p').text('Place Order for '+ book_title+ '?')
-  document.getElementById("order_isbn").value=button.data('bookisbn') 
+  document.getElementById("order_isbn").value=book_isbn
   document.getElementById("order_title").value=book_title
 });
 

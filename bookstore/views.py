@@ -86,7 +86,7 @@ def order(request):
                 username = request.user.username
                 now=datetime.datetime.now()
                 date="%s/%s/%s" % (now.day, now.month, now.year) 
-                cur.execute("INSERT INTO bookstore_order VALUES('3','%s','%s','%s','submitted')"%(username,ISBN,date))
+                cur.execute("INSERT INTO bookstore_order (customer_id,book_id,order_date,order_status) VALUES ('%s','%s','%s','submitted')"%(username,ISBN,date))
                 cur.execute("UPDATE bookstore_book SET copies='%d' WHERE ISBN='%s'"%(avail-copies,ISBN))
                 info = "You have ordered "+title+" successfully."
             else:
