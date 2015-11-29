@@ -7,6 +7,7 @@ urlpatterns = [
     url(r'^logout/$', views.logoutView, name='logout'),
     url(r'^order/$', views.order, name='order'),
     url(r'^shoppingcart/$', views.shoppingcart, name='shoppingcart'),
-    url(r'^myorderrecords/$', views.orderRecords, name='orderRecords')
+    url(r'^myorderrecords/$', views.orderRecords, name='orderRecords'),
+    url(r'^account/$', views.account, name='account')
 
 ]

@@ -3,7 +3,21 @@
 {% block title %}Books{% endblock %}
 
 {% block content %}
-<h3>Order Records</h3>
+<h2>Order Records</h2>
+	<table class="table table-striped">
+	<tr>
+        <th>order id</th>
+        <th>isbn</th>
+        <th>order date</th>
+        <th>order status</th>
+    </tr>
+    {% for order in order_list %}
+    <tr>
+	      <td>{{order.id}}</td>
+	      <td>{{order.book_id}}</td>
+	      <td>{{order.order_date}}</td>
+	      <td>{{order.order_status}}</td>
+	</tr>
 
-
+	{% endfor %}
 {% endblock %}

@@ -25,13 +25,10 @@ class CustomerCreationForm(forms.ModelForm):
 	    return user
 
 class CustomerChangeForm(forms.ModelForm): 
-    password = ReadOnlyPasswordHashField(label="Password")
 
     class Meta:
         model = Customer
-        fields = '__all__'
+        fields = ['fullname','phone','card','address']
 
-    def clean_password(self):
-        return self.initial["password"]
-
-
+	def clean_password(self):
+		return ""

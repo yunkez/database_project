@@ -6,7 +6,7 @@ from django.contrib.auth import login,logout,authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from .models import Book,Customer
-from .forms import CustomerCreationForm
+from .forms import CustomerCreationForm,CustomerChangeForm
 from django.db import connection
 import datetime
 import ast
@@ -131,7 +131,44 @@ def shoppingcart(request):
     return render(request,'bookstore/shopping_cart.html',{'cart_list': cart_list,'base_template':'base_auth.html'})
 
 def orderRecords(request):
-    return render(request, 'bookstore/order_record.html',{'base_template':'base_auth.html'})
+    cur = connection.cursor()
+    username = request.user.username
+    try:
+        cur.execute("SELECT id,book_id,order_date,order_status FROM bookstore_order WHERE customer_id='%s' AND order_status='submitted'"%(username))
+        columns = [col[0] for col in cur.description]
+        order_list = [dict(zip(columns, row)) for row in cur.fetchall()]
+    except:
+        order_list = null
+    return render(request,'bookstore/order_record.html',{'order_list': order_list,'base_template':'base_auth.html'})
+
+
+def account(request):
+    context = RequestContext(request)
+    cur = connection.cursor()
+    username = request.user.username
+    edited = False
+    try:
+        cur.execute("SELECT username,fullname,phone,card,address FROM bookstore_customer WHERE username='%s'"%(username))
+        columns = [col[0] for col in cur.description]
+        user_info = [dict(zip(columns, row)) for row in cur.fetchall()]
+    except:
+        user_info = null
+    if request.method == 'POST':
+        user_form = CustomerChangeForm(data=request.POST)
+        if user_form.is_valid():
+            fullname = request.POST['fullname']
+            phone = request.POST['phone']
+            card = request.POST['card']
+            address = request.POST['address']
+            sql = "UPDATE bookstore_customer SET fullname='%s', phone='%s', card='%s',address='%s';"%(fullname,phone,card,address)
+            cur.execute(sql) 
+            edited = True
+            return HttpResponseRedirect('/bookstore/account')
+        else:
+            print user_form.errors
+    else:
+        user_form = CustomerChangeForm()
+    return render_to_response('bookstore/account_info.html',{'user_info':user_info,'user_form': user_form, 'edited': edited,'base_template':'base.html'},context)
 
 
 

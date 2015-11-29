@@ -1,0 +1,34 @@
+{% extends base_template %}
+
+{% block title %}Books{% endblock %}
+
+{% block content %}
+<h2>Account</h2>
+{% for user in user_info %}
+<h5 class="list-group-item-heading">username: {{user.username}}</h4>
+<h5 class="list-group-item-heading">fullname: {{user.fullname}}</h5>
+<h5 class="list-group-item-heading">phone number: {{user.phone}}</h5>
+<h5 class="list-group-item-heading">card number: {{user.card}}</h5>
+<h5 class="list-group-item-heading">address: {{user.address}}</h5>
+{% endfor %}
+
+
+<h1>Edit Info</h1>
+
+{% if edited %}
+	{% for user in user_info %}
+	<h5 class="list-group-item-heading">username: {{user.username}}</h4>
+	<h5 class="list-group-item-heading">fullname: {{user.fullname}}</h5>
+	<h5 class="list-group-item-heading">phone number: {{user.phone}}</h5>
+	<h5 class="list-group-item-heading">card number: {{user.card}}</h5>
+	<h5 class="list-group-item-heading">address: {{user.address}}</h5>
+	{% endfor %}
+{% else %}
+	<form id="user_form" method="post" action="/bookstore/account/"
+	        enctype="multipart/form-data">
+	    {% csrf_token %}
+	    {{ user_form.as_p }}
+	    <input type="submit" name="submit" value="Save" />
+	</form>
+{% endif %}
+{% endblock %}
