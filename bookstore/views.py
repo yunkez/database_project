@@ -107,7 +107,7 @@ def order(request):
                 cur.execute("UPDATE bookstore_order SET order_status='submitted' WHERE book_id='%s' AND customer_id='%s'AND order_status='AddToCart'"%(ISBN,username))
             except Book.DoesNotExist:
                 info = "Please enter a valid ISBN."
-        return render(request, 'bookstore/finish.html',{'base_template':'base_auth.html'})
+        return HttpResponseRedirect('/bookstore/success')
 
 def shoppingcart(request):
     cart_list = ""
@@ -169,6 +169,18 @@ def account(request):
     else:
         user_form = CustomerChangeForm()
     return render_to_response('bookstore/account_info.html',{'user_info':user_info,'user_form': user_form, 'edited': edited,'base_template':'base.html'},context)
+
+def finish(request):
+    cur = connection.cursor()
+    username = request.user.username
+    sql = "SELECT book_id, count(*) as num from bookstore_order where customer_id in \
+        (SELECT customer_id from bookstore_order where book_id = '%s' and customer_id != '%s')\
+        and book_id != '%s'\
+        group by book_id order by num desc"%('9780470624708',username,'9780470624708')
+    cur.execute(sql)
+    columns = [col[0] for col in cur.description]
+    book_list = [dict(zip(columns, row)) for row in cur.fetchall()]
+    return render(request,'bookstore/finish.html',{'book_list':book_list,'base_template':'base_auth.html'})
 
 
 

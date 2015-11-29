@@ -8,6 +8,8 @@ urlpatterns = [
     url(r'^order/$', views.order, name='order'),
     url(r'^shoppingcart/$', views.shoppingcart, name='shoppingcart'),
     url(r'^myorderrecords/$', views.orderRecords, name='orderRecords'),
-    url(r'^account/$', views.account, name='account')
+    url(r'^account/$', views.account, name='account'),
+    url(r'^success/$', views.finish, name='finish')
+
 
 ]
