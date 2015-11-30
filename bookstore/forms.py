@@ -1,5 +1,5 @@
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm, ReadOnlyPasswordHashField
-from .models import Customer
+from .models import Customer,Book
 from django import forms
 
 class CustomerCreationForm(forms.ModelForm):
@@ -45,3 +45,9 @@ class CustomerChangeForm(forms.ModelForm):
 
 	def clean_password(self):
 		return ""
+
+
+class BookCreationForm(forms.ModelForm):
+	class Meta:
+		model = Book
+		fields = '__all__'

@@ -4,6 +4,7 @@
 
 {% block content %}
 <h1>Books</h1>
+<a href="/bookstore/addnewbook">Add new book</a>
 <form action="/bookstore/" method="POST" class="panel panel-default"> {% csrf_token %}
   <div class="panel-heading">Book Filter Panel
   <a href="/bookstore" class="pull-right">Clear Filter</a>

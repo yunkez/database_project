@@ -1,0 +1,29 @@
+{% extends base_template %}
+
+{% block title %}Bookstore Signup{% endblock %}
+
+{% block content %}
+
+{% if created%}
+<form class="form-signin">
+<br><br><br>
+<strong>Successful</strong><br>
+<a href="/bookstore">Return to the homepage.</a><br/>
+</form>
+
+{% else %}
+<form action="/bookstore/addnewbook/" method="post" id="book_form" enctype="multipart/form-data"> 
+{% csrf_token %}
+<h2 class="form-signin-heading">Create New Book</h2>
+<!--    {% for field in user_form %}
+   <h6 style="color:red">{{field.errors}}</h6>
+   <label for="{{ field.id_for_label }}" class="sr-only">{{ field.label_tag }}</label>
+   {{field}}
+   {% endfor %} -->
+   {{ book_form.as_p }}
+   <input class="btn btn-primary pull-right" type="submit" name="submit" value="Save" />
+   <a class="btn btn-default pull-right" href="/bookstore">Cancel</a>
+   
+</form>
+{% endif %}
+{% endblock %}

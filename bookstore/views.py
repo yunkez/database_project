@@ -6,7 +6,7 @@ from django.contrib.auth import login,logout,authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from .models import Book,Customer
-from .forms import CustomerCreationForm,CustomerChangeForm
+from .forms import CustomerCreationForm,CustomerChangeForm,BookCreationForm
 from django.db import connection
 import datetime
 import ast
@@ -236,4 +236,32 @@ def add(request):
         except Book.DoesNotExist:
             info = "Please enter a valid ISBN."
     return HttpResponseRedirect("/bookstore")
+
+@login_required(login_url='/login')
+def addNewBook(request):
+    context = RequestContext(request)
+    cur = connection.cursor()
+    created = False
+    if request.method == 'POST':
+        book_form = BookCreationForm(data=request.POST)
+        if book_form.is_valid():
+            ISBN = request.POST['ISBN']
+            title = request.POST['title']
+            author = request.POST['author']
+            publisher = request.POST['publisher']
+            keywords = request.POST['keywords']
+            subject = request.POST['subject']
+            format = request.POST['format']
+            year = request.POST['year_of_publication']
+            price = request.POST['price']
+            copies = request.POST['copies']
+            sql = "INSERT INTO bookstore_book VALUES('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s');"\
+            %(ISBN,title,publisher,author,keywords,subject,format,year,price,copies)
+            cur.execute(sql) 
+            created = True
+        else:
+            print book_form.errors
+    else:
+        book_form = BookCreationForm()
+    return render_to_response('bookstore/add_book.html',{'book_form': book_form,'created':created,'base_template':'base_auth.html'},context)
 
