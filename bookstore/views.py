@@ -239,20 +239,23 @@ def manager_account(request):
         date="%"+ "%s/%s" % (now.month, now.year) 
         sql = "SELECT book_id, count(*) as num from bookstore_order where order_date like '%s'  group by book_id\
                 order by num desc;"%(date)       
-        cursor.execute(sql)
+        cur.execute(sql)
         columns = [col[0] for col in cur.description]
-        book_list = [dict(zip(columns, row)) for row in cur.fetchall()]
-        # sql2 = "SELECT b1.author, count(*) as num from bookstore_book b1, bookstore_order o1 where b1.ISBN = o1.book_id\
-        #         and order_date like '%s'group by b1.author order by num desc"%(date)           
-        # cursor.execute(sql2)
-        # pop_author=cursor.fetchall()[:1]
-        # sql3 = "SELECT b1.publisher, count(*) as num from bookstore_book b1, bookstore_order o1 where b1.ISBN = o1.book_id\
-        #         and order_date like '%s' group by b1.publisher order by num desc"%(date)      
-        # cursor.execute(sql3)
-        # pop_publisher=cursor.fetchall()[:1]
+        pop_book = [dict(zip(columns, row)) for row in cur.fetchall()][:2]
+        sql2 = "SELECT b1.author, count(*) as num from bookstore_book b1, bookstore_order o1 where b1.ISBN = o1.book_id\
+                and order_date like '%s'group by b1.author order by num desc;"%(date)   
+        cur.execute(sql2)        
+        columns = [col[0] for col in cur.description]
+        pop_author = [dict(zip(columns, row)) for row in cur.fetchall()][:2]
+        sql3 = "SELECT b1.publisher, count(*) as num from bookstore_book b1, bookstore_order o1 where b1.ISBN = o1.book_id\
+                and order_date like '%s' group by b1.publisher order by num desc;"%(date)
+        cur.execute(sql3)      
+        columns = [col[0] for col in cur.description]
+        pop_publisher = [dict(zip(columns, row)) for row in cur.fetchall()][:2]
     except:
         a = 1
-    return render_to_response('bookstore/account_info.html',{'pop_book':book_list, 'base_template':'base_auth.html','isManager':isManager},context)
+    return render_to_response('bookstore/account_info.html',{'pop_book':pop_book, 'pop_publisher':pop_publisher,'pop_author':pop_author,
+        'base_template':'base_auth.html','isManager':isManager},context)
 
 
 

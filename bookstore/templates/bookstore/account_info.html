@@ -4,9 +4,12 @@
 
 {% block content %}
 {% if isManager %}
+	<h4>popular books</h4>
 	{{pop_book}}
-
+	<h4>popular authors</h4>
 	{{pop_author}}
+	<h4>popular publishers</h4>
+	{{pop_publisher}}
 {% else %}
 	<h2>Account</h2>
 	{% for user in user_info %}
