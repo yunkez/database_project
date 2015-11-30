@@ -36,19 +36,21 @@ def detail(request,isbn):
     except:
         book = ""
         feedback_list = "" 
-    if request.method == 'POST':
-        text = request.POST['feedback_text']
-        ISBN = request.POST['feedback_isbn']
-        score = request.POST['feedback_score']
-        username = request.user.username
-        now=datetime.datetime.now()
-        date="%s/%s/%s" % (now.day, now.month, now.year)
-        sql = "INSERT INTO bookstore_feedback VALUES ('%s','%s','%s','%s','%s')"%\
-                (ISBN,username, text,score,date)
-        cur.execute(sql)
-        return HttpResponseRedirect('/bookstore/'+ISBN)
     return render(request, 'bookstore/index_detail.html',{'feedback_list':feedback_list,'book': book[0],'base_template':'base_auth.html'})
 
+@login_required(login_url='/login')
+def feedback(request):
+    cur = connection.cursor()
+    text = request.POST['feedback_text']
+    ISBN = request.POST['feedback_isbn']
+    score = request.POST['feedback_score']
+    username = request.user.username
+    now=datetime.datetime.now()
+    date="%s/%s/%s" % (now.day, now.month, now.year)
+    sql = "INSERT INTO bookstore_feedback VALUES ('%s','%s','%s','%s','%s')"%\
+            (ISBN,username, text,score,date)
+    cur.execute(sql)
+    return HttpResponseRedirect('/bookstore/'+ISBN)
 
 def user_login(request):
     context = RequestContext(request)
