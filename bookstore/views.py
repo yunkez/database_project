@@ -15,13 +15,41 @@ import ast
 def index(request):
     cur = connection.cursor()
     book_list = ""
+    author = ""
+    publisher = ""
+    title = ""
+    subject = ""
+    orderby = 1
     try:
         cur.execute("SELECT * FROM bookstore_book;")
         columns = [col[0] for col in cur.description]
         book_list = [dict(zip(columns, row)) for row in cur.fetchall()]
     except:
-        book_list = "" 
-    return render(request, 'bookstore/index.html',{'book_list': book_list,'base_template':'base_auth.html'})
+        book_list = ""
+    if request.method == 'POST':
+        author = request.POST['search_author'] 
+        publisher = request.POST['search_publisher'] 
+        title = request.POST['search_title'] 
+        subject = request.POST['search_subject']
+        orderby = int(request.POST['orderby'])
+        if orderby==1:
+            sql = "SELECT * from bookstore_book where title LIKE '%s' and author LIKE '%s' and publisher \
+            LIKE '%s' and subject LIKE '%s' order by year_of_publication;" %\
+            (searchValue(title),searchValue(author),searchValue(publisher),searchValue(subject))
+    
+        else:
+            sql ="SELECT b1.* from bookstore_book b1 join bookstore_feedback where b1.title LIKE '%s' \
+            and b1.author LIKE '%s' and b1.publisher LIKE'%s' and b1.subject LIKE '%s' \
+            group by b1.ISBN order by AVG(score);"%\
+            (searchValue(title),searchValue(author),searchValue(publisher),searchValue(subject))
+        cur.execute(sql)
+        columns = [col[0] for col in cur.description]
+        book_list = [dict(zip(columns, row)) for row in cur.fetchall()]
+    return render(request, 'bookstore/index.html',{'book_list': book_list,'author':author,'subject':subject,
+            'title':title,'publisher':publisher,'orderby':orderby,'base_template':'base_auth.html'})
+
+def searchValue(s):
+    return "%"+s+"%"
 
 @login_required(login_url='/login')
 def detail(request,isbn):

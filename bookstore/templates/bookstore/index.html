@@ -5,31 +5,19 @@
 {% block content %}
 <h1>Books</h1>
 <form action="/bookstore/" method="POST" class="panel panel-default"> {% csrf_token %}
-  <div class="panel-heading">Book Filter Panel</div>
+  <div class="panel-heading">Book Filter Panel
+    <a href="/bookstore" class="pull-right">Clear Filter</a>
+  </div>
   <div class="panel-body">
 	<div class="row">
-	  <div class="col-lg-4">
-<!-- 	    <div class="input-group">
-	      <div class="input-group-btn">
-	        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Title <span class="caret"></span></button>
-	        <ul class="dropdown-menu">
-	        <li><a href="#">Search By</a></li>
-	        <li role="separator" class="divider"></li>
-	          <li><a href="#">Title</a></li>
-	          <li><a href="#">Author</a></li>
-	          <li><a href="#">Subject</a></li>
-	          <li><a href="#">Publisher</a></li>         
-	        </ul>
-	      </div>
-	      <input type="text" class="form-control" aria-label="...">
-	    </div> -->
-    <input placeholder="title" name="search_title" id="search_title"/>
+    <div class="col-lg-4"> 
+    <input placeholder="title" name="search_title" id="search_title" value="{{title}}"/>
 	  </div>
-	  <div class="col-lg-4"><input placeholder="author" name="search_author" id="search_author"/>
+	  <div class="col-lg-4"><input placeholder="author" name="search_author" id="search_author" value="{{author}}"/>
 	  </div>
-    <div class="col-lg-4"><input placeholder="publisher" name="search_publisher" id="search_publisher"/>
+    <div class="col-lg-4"><input placeholder="publisher" name="search_publisher" id="search_publisher" value="{{publisher}}"/>
     </div>
-    <div class="col-lg-4"><input placeholder="subject" name="search_subject" id="search_subject"/>
+    <div class="col-lg-4"><input placeholder="subject" name="search_subject" id="search_subject" value="{{subject}}"/>
     </div>
 	</div>
 
@@ -38,17 +26,15 @@
 	
 	<div class="col-lg-11">
 	
-  <div class="radio">
-    <label><input type="radio" name="optradio">Year</label>
-  </div>
-  <div class="radio">
-    <label><input type="radio" name="optradio">Average score</label>
-  </div>
+  <input type="radio" name="optradio" id="order_1">Year</input>
+  <input type="radio" name="optradio" id="order_2">Average score</input>
+  <input type="hidden" name="orderby" id="orderby" value={{orderby}}></input>
+
 
 	</div>
 	</div>
   </div>
-  <button class="btn btn-primary pull-right" type="submit">Search</button>
+  <button class="btn btn-primary pull-right" type="submit" onclick="SetValue()"id="search_button">Search</button>
 </form>
 <h3>Most Popular Recommendations</h3>
 <div class="list-group">
@@ -116,6 +102,25 @@ $('#OrderModal').on('show.bs.modal', function (event) {
   document.getElementById("order_isbn").value=book_isbn
   document.getElementById("order_title").value=book_title
 });
+
+$( document ).ready(function() {
+   if (document.getElementById('orderby').value==1) {
+      document.getElementById("order_1").checked = true;
+    } else {
+      document.getElementById("order_2").checked = true;
+    }  
+});
+
+
+function SetValue() {
+    if (document.getElementById('order_1').checked) {
+    document.getElementById("orderby").value = 1;
+  } else {
+    document.getElementById("orderby").value = 0;
+  }     
+}
+
+
 
 </script>
 {% endblock %}
