@@ -20,6 +20,7 @@ def index(request):
     title = ""
     subject = ""
     orderby = 1
+    isManager = request.user.is_superuser
     try:
         cur.execute("SELECT * FROM bookstore_book;")
         columns = [col[0] for col in cur.description]
@@ -46,7 +47,7 @@ def index(request):
         columns = [col[0] for col in cur.description]
         book_list = [dict(zip(columns, row)) for row in cur.fetchall()]
     return render(request, 'bookstore/index.html',{'book_list': book_list,'author':author,'subject':subject,
-            'title':title,'publisher':publisher,'orderby':orderby,'base_template':'base_auth.html'})
+            'title':title,'publisher':publisher,'orderby':orderby,'base_template':'base_auth.html','isManager':isManager})
 
 def searchValue(s):
     return "%"+s+"%"
@@ -218,4 +219,21 @@ def account(request):
     else:
         user_form = CustomerChangeForm()
     return render_to_response('bookstore/account_info.html',{'feedback_list':feedback_list,'user_info':user_info,'user_form': user_form, 'edited': edited,'base_template':'base_auth.html'},context)
+
+
+@login_required(login_url='/login')
+def add(request):
+    context = RequestContext(request)
+    cur = connection.cursor()
+    book_list = ""
+    if request.method == 'POST':
+        ISBN = request.POST['add_isbn']
+        copies = int(request.POST['add_copies'])  
+        try:
+            cur.execute("SELECT copies FROM bookstore_book WHERE ISBN = '%s'"%(ISBN))
+            avail = int(cur.fetchone()[0])  
+            cur.execute("UPDATE bookstore_book SET copies='%d' WHERE ISBN='%s'"%(avail+copies,ISBN))
+        except Book.DoesNotExist:
+            info = "Please enter a valid ISBN."
+    return HttpResponseRedirect("/bookstore")
 
