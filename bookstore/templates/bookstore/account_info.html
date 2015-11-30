@@ -3,19 +3,12 @@
 {% block title %}Books{% endblock %}
 
 {% block content %}
-<h2>Account</h2>
-{% for user in user_info %}
-<h5 class="list-group-item-heading">username: {{user.username}}</h4>
-<h5 class="list-group-item-heading">fullname: {{user.fullname}}</h5>
-<h5 class="list-group-item-heading">phone number: {{user.phone}}</h5>
-<h5 class="list-group-item-heading">card number: {{user.card}}</h5>
-<h5 class="list-group-item-heading">address: {{user.address}}</h5>
-{% endfor %}
+{% if isManager %}
+	{{pop_book}}
 
-
-<h1>Edit Info</h1>
-
-{% if edited %}
+	{{pop_author}}
+{% else %}
+	<h2>Account</h2>
 	{% for user in user_info %}
 	<h5 class="list-group-item-heading">username: {{user.username}}</h4>
 	<h5 class="list-group-item-heading">fullname: {{user.fullname}}</h5>
@@ -23,22 +16,33 @@
 	<h5 class="list-group-item-heading">card number: {{user.card}}</h5>
 	<h5 class="list-group-item-heading">address: {{user.address}}</h5>
 	{% endfor %}
-{% else %}
-	<form id="user_form" method="post" action="/bookstore/account/"
-	        enctype="multipart/form-data">
-	    {% csrf_token %}
-	    {{ user_form.as_p }}
-	    <input type="submit" name="submit" value="Save" />
-	</form>
+
+	<h1>Edit Info</h1>
+
+	{% if edited %}
+		{% for user in user_info %}
+		<h5 class="list-group-item-heading">username: {{user.username}}</h4>
+		<h5 class="list-group-item-heading">fullname: {{user.fullname}}</h5>
+		<h5 class="list-group-item-heading">phone number: {{user.phone}}</h5>
+		<h5 class="list-group-item-heading">card number: {{user.card}}</h5>
+		<h5 class="list-group-item-heading">address: {{user.address}}</h5>
+		{% endfor %}
+	{% else %}
+		<form id="user_form" method="post" action="/bookstore/account/"
+		        enctype="multipart/form-data">
+		    {% csrf_token %}
+		    {{ user_form.as_p }}
+		    <input type="submit" name="submit" value="Save" />
+		</form>
+	{% endif %}
+
+	<h2>My feedback</h2>
+
+	{% for feedback in feedback_list %}
+	<h5 class="list-group-item-heading">book:{{feedback.title}}</h4>
+	<h5 class="list-group-item-heading">score:{{feedback.score}}</h5>
+	<h5 class="list-group-item-heading">text:{{feedback.text}}</h5>
+	<h5 class="list-group-item-heading">text:{{feedback.date}}</h5>
+	{% endfor %}
 {% endif %}
-
-<h2>My feedback</h2>
-
-{% for feedback in feedback_list %}
-<h5 class="list-group-item-heading">book:{{feedback.title}}</h4>
-<h5 class="list-group-item-heading">score:{{feedback.score}}</h5>
-<h5 class="list-group-item-heading">text:{{feedback.text}}</h5>
-<h5 class="list-group-item-heading">text:{{feedback.date}}</h5>
-{% endfor %}
-
 {% endblock %}

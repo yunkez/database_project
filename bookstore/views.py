@@ -140,7 +140,7 @@ def order(request):
     book_list = ""
     if request.method == 'POST':
         ISBN = request.POST['order_isbn']
-        copies = int(request.POST['order_copies'])  
+        copies = int(request.POST['spinner'])  
         try:
             cur.execute("SELECT copies FROM bookstore_book WHERE ISBN = '%s'"%(ISBN))
             avail = int(cur.fetchone()[0])  
@@ -186,9 +186,17 @@ def orderRecords(request):
 
 @login_required(login_url='/login')
 def account(request):
+    isManager = request.user.is_superuser
+    if(isManager):
+        return manager_account(request)
+    else:
+        return customer_account(request)
+
+def customer_account(request):
     context = RequestContext(request)
     cur = connection.cursor()
     username = request.user.username
+    isManager = request.user.is_superuser
     edited = False
     try:
         cur.execute("SELECT username,fullname,phone,card,address \
@@ -218,7 +226,34 @@ def account(request):
             print user_form.errors
     else:
         user_form = CustomerChangeForm()
-    return render_to_response('bookstore/account_info.html',{'feedback_list':feedback_list,'user_info':user_info,'user_form': user_form, 'edited': edited,'base_template':'base_auth.html'},context)
+    return render_to_response('bookstore/account_info.html',{'feedback_list':feedback_list,'user_info':user_info,
+        'user_form': user_form, 'edited': edited,'base_template':'base_auth.html','isManager':isManager},context)
+
+def manager_account(request):
+    context = RequestContext(request)
+    cur = connection.cursor()
+    isManager = request.user.is_superuser
+    book_list=""
+    try:
+        now=datetime.datetime.now()
+        date="%"+ "%s/%s" % (now.month, now.year) 
+        sql = "SELECT book_id, count(*) as num from bookstore_order where order_date like '%s'  group by book_id\
+                order by num desc;"%(date)       
+        cursor.execute(sql)
+        columns = [col[0] for col in cur.description]
+        book_list = [dict(zip(columns, row)) for row in cur.fetchall()]
+        # sql2 = "SELECT b1.author, count(*) as num from bookstore_book b1, bookstore_order o1 where b1.ISBN = o1.book_id\
+        #         and order_date like '%s'group by b1.author order by num desc"%(date)           
+        # cursor.execute(sql2)
+        # pop_author=cursor.fetchall()[:1]
+        # sql3 = "SELECT b1.publisher, count(*) as num from bookstore_book b1, bookstore_order o1 where b1.ISBN = o1.book_id\
+        #         and order_date like '%s' group by b1.publisher order by num desc"%(date)      
+        # cursor.execute(sql3)
+        # pop_publisher=cursor.fetchall()[:1]
+    except:
+        a = 1
+    return render_to_response('bookstore/account_info.html',{'pop_book':book_list, 'base_template':'base_auth.html','isManager':isManager},context)
+
 
 
 @login_required(login_url='/login')
