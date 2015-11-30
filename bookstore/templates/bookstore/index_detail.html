@@ -6,7 +6,7 @@
 
 <h1>{{book.title}}</h1>
 
-<a href="#" class="list-group-item bs-callout-warning">
+<div class="list-group-item bs-callout-warning">
 <div class="row">
   <div class="col-lg-2">
     <img class="img-thumbnail" src="http://ecx.images-amazon.com/images/I/51AcjY2mWgL._SX358_BO1,204,203,200_.jpg"/>
@@ -32,6 +32,7 @@
     </p>
   <button class="btn btn-s btn-warning pull-right" data-toggle="modal" data-target="#OrderModal" data-booktitle="{{book.title}}" data-bookisbn="{{book.ISBN}}" data-bookcopies="{{book.copies}}"> Order </button>
 
+  <p class="list-group-item-text">ISBN: {{book.ISBN}}</p>
   <p class="list-group-item-text">Published by {{book.publisher}} in {{book.year_of_publication}}</p>
   <p class="list-group-item-text">Keywords: {{book.keywords}}</p>
   <p class="list-group-item-text">Subject: {{book.subject}}</p>
@@ -39,38 +40,37 @@
   <p class="list-group-item-text">Prices: {{book.price}}</p>
   </div>
 </div>
-</a>
+</div>
 
-<h3>Customer Feedback</h3>
+<h4>Customer Feedback</h4>
 <div class="list-group" style="max-height:250px;min-height:250px;overflow-y:auto">
 {% for feedback in feedback_list %}
 <div class="list-group-item bs-callout-warning">
 <div class="row">
   <div class="col-lg-1">
-    <img class="img-circle" src=""/>
+    <img class="img-thumbnail" src="http://static1.squarespace.com/static/5432fb86e4b0a2c1da894800/t/54f8e985e4b0e3b41a3efe03/1425598853953/Avatar+%5Bcircle%5D.png?format=500w">
   </div>
-  <div class="col-lg-11"></div>
+  <div class="col-lg-2">
+    <h5>{{feedback.customer_id}}'s comment</h5>
+    <h6 class="text-muted">@{{feedback.date}}</h6>
+    <h6 class="text-success">score: {{feedback.score}}</h6>
+  </div>
+  <div class="col-lg-9">
+    <p>{{feedback.text}}</p>
+  </div>
 </div>
-<p>{{feedback.customer_id}}</p>
-<p>{{feedback.score}}</p>
-<p>{{feedback.text}}</p>
-<p>{{feedback.date}}</p>
 </div>
 {%  endfor %}
 </div>
 <div>
  <form action="/bookstore/feedback/" method="POST" id="FeedbackForm"> {% csrf_token %}
-
-    text: <input id="feedback_text" name="feedback_text" value=""></input>
-    score: <input id="feedback_score" name="feedback_score" value=""></input>
+   Feedback 0-10 (score): <input id="feedback_score" name="feedback_score" value=""></input>
+    <textarea class="form-control" id="feedback_text" name="feedback_text" value="" placeholder="write down your feedback for this book."></textarea> 
     <input type="hidden" id="feedback_isbn" name="feedback_isbn" value="{{book.ISBN}}"></input>
-    <button type="submit" class="btn btn-primary" name="order">Confirm</button>
+    <button type="submit" class="btn btn-primary btn-success pull-right" name="order">Submit</button>
 
 </form> 
 </div>
-
-
-
 
 <div class="modal fade" id="OrderModal" tabindex="-1" role="dialog" aria-labelledby="OrderModalLabel">
   <div class="modal-dialog" role="document">
@@ -79,16 +79,32 @@
         <h4 class="modal-title" id="OrderModalLabel"></h4>
       </div>
       <form action="/bookstore/order/" method="POST" id="OrderForm"> {% csrf_token %}
-      	<div class="modal-body">
-      		<input id="order_copies" name="order_copies" value=""></input>
-      		<p id="modalavail"></p>
-      	</div>
-     	<div class="modal-footer">
-      		<input type="hidden" id="order_isbn" name="order_isbn"></input>
-      		<input type="hidden" id="order_title" name="order_title"></input>
-        	<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        	<button type="submit" class="btn btn-primary" name="order">Confirm</button>
-      	</div>
+        <div class="modal-body">
+        <div class="input-group">
+
+</div>
+<div class="input-group">
+    <span class="input-group-btn">
+        <button type="button" class="btn btn-default" data-value="decrease" data-target="#spinner" data-toggle="spinner">
+            <span class="glyphicon glyphicon-minus"></span>
+        </button>
+    </span>
+    <input data-ride="spinner" id="spinner" class="form-control input-number" value="1" data-min="1" data-max="10" name="spinner">
+    <span class="input-group-btn">
+        <button type="button" class="btn btn-default" data-value="increase" data-target="#spinner" data-toggle="spinner">
+            <span class="glyphicon glyphicon-plus"></span>
+        </button>
+    </span>
+</div>
+
+          <p id="modalavail"></p>
+        </div>
+      <div class="modal-footer">
+          <input type="hidden" id="order_isbn" name="order_isbn"></input>
+          <input type="hidden" id="order_title" name="order_title"></input>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary" name="order">Confirm</button>
+        </div>
       </form>
     </div>
   </div>
@@ -107,7 +123,5 @@ $('#OrderModal').on('show.bs.modal', function (event) {
   document.getElementById("order_isbn").value=book_isbn
   document.getElementById("order_title").value=book_title
 });
-
-
 </script>
 {% endblock %}
