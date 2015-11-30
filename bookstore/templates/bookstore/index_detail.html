@@ -3,73 +3,15 @@
 {% block title %}Books{% endblock %}
 
 {% block content %}
-<h1>Books</h1>
-<div class="panel panel-default">
-  <div class="panel-heading">Book Filter Panel</div>
-  <div class="panel-body">
-	<div class="row">
-	  <div class="col-lg-6">
-	    <div class="input-group">
-	      <div class="input-group-btn">
-	        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Title <span class="caret"></span></button>
-	        <ul class="dropdown-menu">
-	        <li><a href="#">Search By</a></li>
-	        <li role="separator" class="divider"></li>
-	          <li><a href="#">Title</a></li>
-	          <li><a href="#">Author</a></li>
-	          <li><a href="#">Subject</a></li>
-	          <li><a href="#">Publisher</a></li>         
-	        </ul>
-	      </div>
-	      <input type="text" class="form-control" aria-label="...">
-	    </div>
-	  </div>
-	  <div class="col-lg-6">
-	  </div>
-	</div>
 
-	<div class="row">
-	<div class="col-lg-1"><h6>Price From</h6></div>
-		<div class="col-lg-1"><input type="number" class="form-control"></div>
-		<div class="col-lg-1"><h6>To</h6></div>
-		<div class="col-lg-1"><input type="number" class="form-control"></div>
-		<div class="col-lg-4"></div>
-	</div>
 
-	<div class="row">
-	<div class="col-lg-1"><h6>Order By</h6></div>
-	
-	<div class="col-lg-11">
-	
-	<div class="btn-group btn-group-justified" role="group" aria-label="...">
-	  <div class="btn-group" role="group">
-	    <button type="button" class="btn btn-default">Title</button>
-	  </div>
-	  <div class="btn-group" role="group">
-	    <button type="button" class="btn btn-default">Author</button>
-	  </div>
-	  <div class="btn-group" role="group">
-	    <button type="button" class="btn btn-default">Subject</button>
-	  </div>
-	  <div class="btn-group" role="group">
-	    <button type="button" class="btn btn-default">Price</button>
-	  </div>
-	  <div class="btn-group" role="group">
-	    <button type="button" class="btn btn-default">Stock</button>
-	  </div>
-	  <div class="btn-group" role="group">
-	    <button type="button" class="btn btn-default">Publication Year</button>
-	  </div>
-	</div>
-	</div>
-	</div>
-  </div>
-</div>
-<h3>Most Popular Recommendations</h3>
-<div class="list-group">
-{% for book in book_list %}
-<a class="list-group-item bs-callout-warning">
-	<a href="/bookstore/{{book.ISBN}}"><h4 class="list-group-item-heading">{{book.title}}</h4></a>
+
+<h1>{{book.title}}</h1>
+
+
+
+<a href="#" class="list-group-item bs-callout-warning">
+	<h4 class="list-group-item-heading">{{book.title}}</h4>
   <h5 class="list-group-item-heading">By {{book.author}}</h5>
 
 <p class="starp">
@@ -93,8 +35,25 @@
   <p class="list-group-item-text">Subject: {{book.subject}}</p>
 
 </a>
-{% endfor %}
-</div>
+
+{% for feedback in feedback_list %}
+<p>{{feedback.customer_id}}</p>
+<p>{{feedback.score}}</p>
+<p>{{feedback.text}}</p>
+
+{%  endfor %}
+
+<form action="/bookstore/{{book.ISBN}}/" method="POST" id="FeedbackForm"> {% csrf_token %}
+
+    text: <input id="feedback_text" name="feedback_text" value=""></input>
+    score: <input id="feedback_score" name="feedback_score" value=""></input>
+    <input type="hidden" id="feedback_isbn" name="feedback_isbn" value="{{book.ISBN}}"></input>
+
+    <button type="submit" class="btn btn-primary" name="order">Confirm</button>
+
+</form>
+
+
 
 <div class="modal fade" id="OrderModal" tabindex="-1" role="dialog" aria-labelledby="OrderModalLabel">
   <div class="modal-dialog" role="document">
@@ -131,6 +90,7 @@ $('#OrderModal').on('show.bs.modal', function (event) {
   document.getElementById("order_isbn").value=book_isbn
   document.getElementById("order_title").value=book_title
 });
+
 
 </script>
 {% endblock %}

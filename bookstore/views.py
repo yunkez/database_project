@@ -13,15 +13,40 @@ import ast
 
 @login_required(login_url='/login')
 def index(request):
-    book_list = ""
     cur = connection.cursor()
+    book_list = ""
     try:
-        cur.execute("select * from bookstore_book")
+        cur.execute("SELECT * FROM bookstore_book;")
         columns = [col[0] for col in cur.description]
         book_list = [dict(zip(columns, row)) for row in cur.fetchall()]
     except:
         book_list = "" 
     return render(request, 'bookstore/index.html',{'book_list': book_list,'base_template':'base_auth.html'})
+
+@login_required(login_url='/login')
+def detail(request,isbn):
+    cur = connection.cursor()
+    try:
+        cur.execute("SELECT * FROM bookstore_feedback WHERE book_id='%s';"%(isbn))
+        columns = [col[0] for col in cur.description]
+        feedback_list = [dict(zip(columns, row)) for row in cur.fetchall()]
+        cur.execute("SELECT * FROM bookstore_book WHERE ISBN='%s';"%(isbn))
+        columns = [col[0] for col in cur.description]
+        book = [dict(zip(columns, row)) for row in cur.fetchall()]
+    except:
+        book = ""
+        feedback_list = "" 
+    if request.method == 'POST':
+        text = request.POST['feedback_text']
+        ISBN = request.POST['feedback_isbn']
+        score = request.POST['feedback_score']
+        username = request.user.username
+        sql = "INSERT INTO bookstore_feedback VALUES ('%s','%s','%s','%s')"%\
+                (ISBN,username, text,score)
+        cur.execute(sql)
+        return HttpResponseRedirect('/bookstore/'+ISBN)
+    return render(request, 'bookstore/index_detail.html',{'feedback_list':feedback_list,'book': book[0],'base_template':'base_auth.html'})
+
 
 def user_login(request):
     context = RequestContext(request)
@@ -66,6 +91,7 @@ def register(request):
         user_form = CustomerCreationForm()
     return render_to_response('bookstore/signup.html',{'user_form': user_form, 'registered': registered,'base_template':'base.html'},context)
 
+@login_required(login_url='/login')
 def logoutView(request, onsuccess='/login', onfail='/bookstore'):
     if request.user.is_authenticated():
         logout(request)
@@ -73,10 +99,12 @@ def logoutView(request, onsuccess='/login', onfail='/bookstore'):
     else:
         return redirect(onfail)
 
+@login_required(login_url='/login')
 def order(request):
     context = RequestContext(request)
     cur = connection.cursor()
     completed = False
+    book_list = ""
     if request.method == 'POST':
         ISBN = request.POST['order_isbn']
         copies = int(request.POST['order_copies'])  
@@ -109,6 +137,7 @@ def order(request):
     else:
         return render(request,'bookstore/finish.html',{'completed':completed,'book_list':book_list,'base_template':'base_auth.html'})
 
+@login_required(login_url='/login')
 def orderRecords(request):
     cur = connection.cursor()
     username = request.user.username
@@ -122,6 +151,7 @@ def orderRecords(request):
         order_list = null
     return render(request,'bookstore/order_record.html',{'order_list': order_list,'base_template':'base_auth.html'})
 
+@login_required(login_url='/login')
 def account(request):
     context = RequestContext(request)
     cur = connection.cursor()
@@ -132,8 +162,13 @@ def account(request):
             FROM bookstore_customer WHERE username='%s'"%(username))
         columns = [col[0] for col in cur.description]
         user_info = [dict(zip(columns, row)) for row in cur.fetchall()]
+        cur.execute("SELECT book_id,text,score \
+            FROM bookstore_feedback WHERE customer_id='%s'"%(username))
+        columns = [col[0] for col in cur.description]
+        feedback_list = [dict(zip(columns, row)) for row in cur.fetchall()]
     except:
-        user_info = null
+        user_info = ""
+        feedback_list = ""
     if request.method == 'POST':
         user_form = CustomerChangeForm(data=request.POST)
         if user_form.is_valid():
@@ -150,6 +185,6 @@ def account(request):
             print user_form.errors
     else:
         user_form = CustomerChangeForm()
-    return render_to_response('bookstore/account_info.html',{'user_info':user_info,'user_form': user_form, 'edited': edited,'base_template':'base.html'},context)
+    return render_to_response('bookstore/account_info.html',{'feedback_list':feedback_list,'user_info':user_info,'user_form': user_form, 'edited': edited,'base_template':'base_auth.html'},context)
 
 
