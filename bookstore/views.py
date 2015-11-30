@@ -53,7 +53,8 @@ def register(request):
             phone = request.POST['phone']
             card = request.POST['card']
             address = request.POST['address']
-            sql = "INSERT INTO bookstore_customer VALUES('password',NULL,'0','%s','%s','%s','%s','%s','1','1');"%(username,fullname,phone,card,address)
+            sql = "INSERT INTO bookstore_customer VALUES\
+            ('password',NULL,'0','%s','%s','%s','%s','%s','1','1');"%(username,fullname,phone,card,address)
             cur.execute(sql) 
             u = Customer.objects.get(username=username)
             u.set_password("%s"% password)
@@ -86,7 +87,8 @@ def order(request):
                 username = request.user.username
                 now=datetime.datetime.now()
                 date="%s/%s/%s" % (now.day, now.month, now.year)
-                cur.execute("INSERT INTO bookstore_order (customer_id,book_id,order_date,order_status,copies) VALUES ('%s','%s','%s','completed','%s')"%(username,ISBN,date,copies))
+                cur.execute("INSERT INTO bookstore_order (customer_id,book_id,order_date,order_status,copies) \
+                    VALUES ('%s','%s','%s','completed','%s')"%(username,ISBN,date,copies))
                 cur.execute("UPDATE bookstore_book SET copies='%d' WHERE ISBN='%s'"%(avail-copies,ISBN))
                 completed = True
             else:
@@ -95,22 +97,25 @@ def order(request):
             info = "Please enter a valid ISBN."
     if completed:
         username = request.user.username
-        sql = "SELECT book_id, count(*) as num from bookstore_order where customer_id in \
+        sql = "SELECT title,author from bookstore_book where ISBN in (SELECT book_id FROM \
+            (SELECT book_id, count(*) as num from bookstore_order where customer_id in \
             (SELECT customer_id from bookstore_order where book_id = '%s' and customer_id != '%s')\
             and book_id != '%s'\
-            group by book_id order by num desc"%(ISBN,username,ISBN)
+            group by book_id order by num desc) T) "%(ISBN,username,ISBN)
         cur.execute(sql)
         columns = [col[0] for col in cur.description]
         book_list = [dict(zip(columns, row)) for row in cur.fetchall()]
-        return render(request,'bookstore/finish.html',{'book_list':book_list,'base_template':'base_auth.html'})
+        return render(request,'bookstore/finish.html',{'completed':completed,'book_list':book_list,'base_template':'base_auth.html'})
     else:
-        return HttpResponse("Your request is invalid.")
+        return render(request,'bookstore/finish.html',{'completed':completed,'book_list':book_list,'base_template':'base_auth.html'})
 
 def orderRecords(request):
     cur = connection.cursor()
     username = request.user.username
     try:
-        cur.execute("SELECT id,book_id,order_date,order_status FROM bookstore_order WHERE customer_id='%s' AND order_status='submitted'"%(username))
+        cur.execute("SELECT id,book_id,title,order_date,order_status,bookstore_order.copies FROM \
+            bookstore_order JOIN bookstore_book WHERE bookstore_order.book_id=bookstore_book.ISBN \
+            AND customer_id='%s' AND order_status='completed' order by id desc"%(username))
         columns = [col[0] for col in cur.description]
         order_list = [dict(zip(columns, row)) for row in cur.fetchall()]
     except:
@@ -123,7 +128,8 @@ def account(request):
     username = request.user.username
     edited = False
     try:
-        cur.execute("SELECT username,fullname,phone,card,address FROM bookstore_customer WHERE username='%s'"%(username))
+        cur.execute("SELECT username,fullname,phone,card,address \
+            FROM bookstore_customer WHERE username='%s'"%(username))
         columns = [col[0] for col in cur.description]
         user_info = [dict(zip(columns, row)) for row in cur.fetchall()]
     except:
@@ -135,7 +141,8 @@ def account(request):
             phone = request.POST['phone']
             card = request.POST['card']
             address = request.POST['address']
-            sql = "UPDATE bookstore_customer SET fullname='%s', phone='%s', card='%s',address='%s';"%(fullname,phone,card,address)
+            sql = "UPDATE bookstore_customer SET \
+            fullname='%s', phone='%s', card='%s',address='%s';"%(fullname,phone,card,address)
             cur.execute(sql) 
             edited = True
             return HttpResponseRedirect('/bookstore/account')
@@ -144,18 +151,5 @@ def account(request):
     else:
         user_form = CustomerChangeForm()
     return render_to_response('bookstore/account_info.html',{'user_info':user_info,'user_form': user_form, 'edited': edited,'base_template':'base.html'},context)
-
-# def finish(request):
-#     cur = connection.cursor()
-#     username = request.user.username
-#     sql = "SELECT book_id, count(*) as num from bookstore_order where customer_id in \
-#         (SELECT customer_id from bookstore_order where book_id = '%s' and customer_id != '%s')\
-#         and book_id != '%s'\
-#         group by book_id order by num desc"%('9780470624708',username,'9780470624708')
-#     cur.execute(sql)
-#     columns = [col[0] for col in cur.description]
-#     book_list = [dict(zip(columns, row)) for row in cur.fetchall()]
-#     return render(request,'bookstore/finish.html',{'book_list':book_list,'base_template':'base_auth.html'})
-
 
 

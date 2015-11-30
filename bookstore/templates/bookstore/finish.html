@@ -3,10 +3,22 @@
 {% block title %}Books{% endblock %}
 
 {% block content %}
-<h2>Order Successful</h2>
 
-<a href="/bookstore">Return to home page</a>
 
-<h5>You may also like</h5>
-<p>{{book_list}}</p>
+{% if completed %}
+	<h2>Order Successful</h2>
+
+	<a href="/bookstore">Return to home page</a>
+
+		<h5>You may also like</h5>
+
+		{% for book in book_list %}
+			<p class="list-group-item-heading">{{book.title}}</h4>
+		  	<p class="list-group-item-heading">By {{book.author}}</h5>
+		{% endfor %}
+
+{% else %}
+	<p> Your request is invalid. </p>
+	<a href="/bookstore">Return to home page</a>
+{% endif %}
 {% endblock %}
