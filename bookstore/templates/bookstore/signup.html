@@ -1,23 +1,28 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>Online Bookstore Registration</title>
-    </head>
+{% extends base_template %}
 
-    <body>
-        <h1>Register</h1>
-        {% if registered %}
-        <strong>thank you for registering!</strong>
-        <a href="/bookstore">Return to the homepage.</a><br/>
-        {% else %}
+{% block title %}Bookstore Signup{% endblock %}
 
-        <form id="user_form" method="post" action="/register/"
-                enctype="multipart/form-data">
-            {% csrf_token %}
-            {{ user_form.as_p }}
-            <input type="submit" name="submit" value="Register" />
+{% block content %}
 
-        </form>
-        {% endif %}
-    </body>
-</html>
+{% if registered %}
+<form class="form-signin">
+<br><br><br>
+<strong>Thank You for Registering!</strong><br>
+<a href="/bookstore">Return to the homepage.</a><br/>
+</form>
+
+{% else %}
+<form action="/register/" class="form-signin" method="post" id="user_form" enctype="multipart/form-data"> 
+<h2 class="form-signin-heading">Please register</h2>
+   {% csrf_token %}
+   {% for field in user_form %}
+   <h6 style="color:red">{{field.errors}}</h6>
+   <label for="{{ field.id_for_label }}" class="sr-only">{{ field.label_tag }}</label>
+   {{field}}
+   {% endfor %}
+   <a class="btn btn-default pull-right" href="/bookstore">Cancel</a>
+   <input class="btn btn-primary pull-right" type="submit" name="submit" value="Register" />
+   
+</form>
+{% endif %}
+{% endblock %}
