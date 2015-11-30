@@ -40,7 +40,7 @@
 <p>{{feedback.customer_id}}</p>
 <p>{{feedback.score}}</p>
 <p>{{feedback.text}}</p>
-
+<p>{{feedback.date}}</p>
 {%  endfor %}
 
 <form action="/bookstore/{{book.ISBN}}/" method="POST" id="FeedbackForm"> {% csrf_token %}
