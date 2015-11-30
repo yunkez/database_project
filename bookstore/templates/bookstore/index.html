@@ -12,7 +12,7 @@
   <div class="row">
     <div class="col-lg-1"><h6>Search By</h6></div>
     <div class="col-lg-2">
-    <input class="form-control" placeholder="Title" name="search_title" id="search_title" value="{{title}}" />
+    <input class="form-control" placeholder="Title" name="search_title" id="search_title" value="{{title}}"/>
     </div>
     <div class="col-lg-2">
     <input class="form-control" placeholder="Author" name="search_author" id="search_author" value="{{author}}"/>
@@ -36,12 +36,15 @@
   </div>
 </form>
 
-
 <h3>Most Popular Recommendations</h3>
 <div class="list-group">
 {% for book in book_list %}
-<a class="list-group-item bs-callout-warning">
-	<a href="/bookstore/{{book.ISBN}}"><h4 class="list-group-item-heading">{{book.title}}</h4></a>
+<div class="list-group-item bs-callout-warning">
+<div class="row">
+  <div class="col-lg-2"><img class="img-thumbnail" src="http://ecx.images-amazon.com/images/I/51AcjY2mWgL._SX358_BO1,204,203,200_.jpg"/>
+  </div>
+  <div class="col-lg-10">
+    <a href="/bookstore/{{book.ISBN}}"><h4 class="list-group-item-heading">{{book.title}}</h4></a>
   <h5 class="list-group-item-heading">By {{book.author}}</h5>
 
 <p class="starp">
@@ -62,9 +65,12 @@
   <button class="btn btn-s btn-warning pull-right" data-toggle="modal" data-target="#OrderModal" data-booktitle="{{book.title}}" data-bookisbn="{{book.ISBN}}" data-bookcopies="{{book.copies}}"> Order </button>
 
   <p class="list-group-item-text">Published by {{book.publisher}} in {{book.year_of_publication}}</p>
+  <p class="list-group-item-text">Price: {{book.price}}</p>
   <p class="list-group-item-text">Subject: {{book.subject}}</p>
 
-</a>
+  </div>
+</div>
+</div>
 {% endfor %}
 </div>
 
@@ -76,12 +82,12 @@
       </div>
       <form action="/bookstore/order/" method="POST" id="OrderForm"> {% csrf_token %}
       	<div class="modal-body">
-      		<input id="order_copies" name="order_copies" value=""></input>
+      		<input id="order_copies" name="order_copies" value=""/>
       		<p id="modalavail"></p>
       	</div>
      	<div class="modal-footer">
-      		<input type="hidden" id="order_isbn" name="order_isbn"></input>
-      		<input type="hidden" id="order_title" name="order_title"></input>
+      		<input type="hidden" id="order_isbn" name="order_isbn"/>
+      		<input type="hidden" id="order_title" name="order_title"/>
         	<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
         	<button type="submit" class="btn btn-primary" name="order">Confirm</button>
       	</div>
@@ -89,6 +95,7 @@
     </div>
   </div>
 </div>
+
 
 <script type="text/javascript">
 

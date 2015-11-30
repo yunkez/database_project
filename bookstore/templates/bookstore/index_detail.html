@@ -4,14 +4,15 @@
 
 {% block content %}
 
-
-
 <h1>{{book.title}}</h1>
 
-
-
 <a href="#" class="list-group-item bs-callout-warning">
-	<h4 class="list-group-item-heading">{{book.title}}</h4>
+<div class="row">
+  <div class="col-lg-2">
+    <img class="img-thumbnail" src="http://ecx.images-amazon.com/images/I/51AcjY2mWgL._SX358_BO1,204,203,200_.jpg"/>
+  </div>
+  <div class="col-lg-10">
+    <h4 class="list-group-item-heading">{{book.title}}</h4>
   <h5 class="list-group-item-heading">By {{book.author}}</h5>
 
 <p class="starp">
@@ -32,7 +33,13 @@
   <button class="btn btn-s btn-warning pull-right" data-toggle="modal" data-target="#OrderModal" data-booktitle="{{book.title}}" data-bookisbn="{{book.ISBN}}" data-bookcopies="{{book.copies}}"> Order </button>
 
   <p class="list-group-item-text">Published by {{book.publisher}} in {{book.year_of_publication}}</p>
+  <p class="list-group-item-text">Keywords: {{book.keywords}}</p>
   <p class="list-group-item-text">Subject: {{book.subject}}</p>
+  <p class="list-group-item-text">{{book.copies}} copies available in {{book.format}}</p>
+  <p class="list-group-item-text">Prices: {{book.price}}</p>
+  </div>
+</div>
+	
 
 </a>
 
