@@ -6,10 +6,10 @@ urlpatterns = [
     url(r'^$', views.index, name='index'),
     url(r'^logout/$', views.logoutView, name='logout'),
     url(r'^order/$', views.order, name='order'),
-    url(r'^shoppingcart/$', views.shoppingcart, name='shoppingcart'),
+    # url(r'^shoppingcart/$', views.shoppingcart, name='shoppingcart'),
     url(r'^myorderrecords/$', views.orderRecords, name='orderRecords'),
     url(r'^account/$', views.account, name='account'),
-    url(r'^success/$', views.finish, name='finish')
+    # url(r'^success/$', views.finish, name='finish')
 
 
 ]

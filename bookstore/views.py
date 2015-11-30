@@ -21,25 +21,6 @@ def index(request):
         book_list = [dict(zip(columns, row)) for row in cur.fetchall()]
     except:
         book_list = "" 
-    if request.method == 'POST':
-        ISBN = request.POST['cart_isbn']
-        copies = int(request.POST['cart_copies'])
-        try:
-            cur.execute("SELECT copies FROM bookstore_book WHERE ISBN = '%s'"%(ISBN))
-            avail = int(cur.fetchone()[0])  
-            if avail-copies >= 0:
-                username = request.user.username
-                now=datetime.datetime.now()
-                date="%s/%s/%s" % (now.day, now.month, now.year) 
-                for i in xrange(copies):
-                    cur.execute("INSERT INTO bookstore_order (customer_id,book_id,order_date,order_status) VALUES ('%s','%s','%s','AddToCart')"%(username,ISBN,date))
-                cur.execute("UPDATE bookstore_book SET copies='%d' WHERE ISBN='%s'"%(avail-copies,ISBN))
-                info = "Successful"
-            else:
-                info = "Not enough stock"
-        except Book.DoesNotExist:
-            info = "Please enter a valid ISBN."
-        return HttpResponseRedirect('/bookstore')
     return render(request, 'bookstore/index.html',{'book_list': book_list,'base_template':'base_auth.html'})
 
 def user_login(request):
@@ -94,41 +75,36 @@ def logoutView(request, onsuccess='/login', onfail='/bookstore'):
 def order(request):
     context = RequestContext(request)
     cur = connection.cursor()
-    username = request.user.username
-    now=datetime.datetime.now()
-    date="%s/%s/%s" % (now.day, now.month, now.year) 
+    completed = False
     if request.method == 'POST':
-        order_list = request.POST['order_list']
-        order_list = ast.literal_eval(order_list)
-        for order in order_list:
-            ISBN = order['ISBN']
-            copies = order['count']       
-            try:
-                cur.execute("UPDATE bookstore_order SET order_status='submitted' WHERE book_id='%s' AND customer_id='%s'AND order_status='AddToCart'"%(ISBN,username))
-            except Book.DoesNotExist:
-                info = "Please enter a valid ISBN."
-        return HttpResponseRedirect('/bookstore/success')
-
-def shoppingcart(request):
-    cart_list = ""
-    cur = connection.cursor()
-    try:
+        ISBN = request.POST['order_isbn']
+        copies = int(request.POST['order_copies'])  
+        try:
+            cur.execute("SELECT copies FROM bookstore_book WHERE ISBN = '%s'"%(ISBN))
+            avail = int(cur.fetchone()[0])  
+            if avail>=copies:
+                username = request.user.username
+                now=datetime.datetime.now()
+                date="%s/%s/%s" % (now.day, now.month, now.year)
+                cur.execute("INSERT INTO bookstore_order (customer_id,book_id,order_date,order_status,copies) VALUES ('%s','%s','%s','completed','%s')"%(username,ISBN,date,copies))
+                cur.execute("UPDATE bookstore_book SET copies='%d' WHERE ISBN='%s'"%(avail-copies,ISBN))
+                completed = True
+            else:
+                info = "Not enough stock"
+        except Book.DoesNotExist:
+            info = "Please enter a valid ISBN."
+    if completed:
         username = request.user.username
-        cur.execute("select ISBN,title,author,count from (select book_id, count(*) as count from bookstore_order where order_status='AddToCart' and customer_id = '%s' group by book_id) t join bookstore_book where t.book_id = bookstore_book.ISBN;" %(username));
+        sql = "SELECT book_id, count(*) as num from bookstore_order where customer_id in \
+            (SELECT customer_id from bookstore_order where book_id = '%s' and customer_id != '%s')\
+            and book_id != '%s'\
+            group by book_id order by num desc"%(ISBN,username,ISBN)
+        cur.execute(sql)
         columns = [col[0] for col in cur.description]
-        cart_list = [dict(zip(columns, row)) for row in cur.fetchall()]
-    except:
-        cart_list = "" 
-    if request.method == 'POST':
-        ISBN = request.POST['delete_isbn']
-        count = int(request.POST['delete_count'])
-        username = request.user.username
-        cur.execute("SELECT copies FROM bookstore_book WHERE ISBN = '%s'"%(ISBN))
-        avail = int(cur.fetchone()[0]) 
-        cur.execute("DELETE FROM bookstore_order WHERE book_id='%s' AND customer_id='%s' AND order_status='AddToCart'"%(ISBN,username))
-        cur.execute("UPDATE bookstore_book SET copies='%d' WHERE ISBN='%s'"%(avail+count,ISBN))
-        return HttpResponseRedirect('/bookstore/shoppingcart')
-    return render(request,'bookstore/shopping_cart.html',{'cart_list': cart_list,'base_template':'base_auth.html'})
+        book_list = [dict(zip(columns, row)) for row in cur.fetchall()]
+        return render(request,'bookstore/finish.html',{'book_list':book_list,'base_template':'base_auth.html'})
+    else:
+        return HttpResponse("Your request is invalid.")
 
 def orderRecords(request):
     cur = connection.cursor()
@@ -140,7 +116,6 @@ def orderRecords(request):
     except:
         order_list = null
     return render(request,'bookstore/order_record.html',{'order_list': order_list,'base_template':'base_auth.html'})
-
 
 def account(request):
     context = RequestContext(request)
@@ -170,17 +145,17 @@ def account(request):
         user_form = CustomerChangeForm()
     return render_to_response('bookstore/account_info.html',{'user_info':user_info,'user_form': user_form, 'edited': edited,'base_template':'base.html'},context)
 
-def finish(request):
-    cur = connection.cursor()
-    username = request.user.username
-    sql = "SELECT book_id, count(*) as num from bookstore_order where customer_id in \
-        (SELECT customer_id from bookstore_order where book_id = '%s' and customer_id != '%s')\
-        and book_id != '%s'\
-        group by book_id order by num desc"%('9780470624708',username,'9780470624708')
-    cur.execute(sql)
-    columns = [col[0] for col in cur.description]
-    book_list = [dict(zip(columns, row)) for row in cur.fetchall()]
-    return render(request,'bookstore/finish.html',{'book_list':book_list,'base_template':'base_auth.html'})
+# def finish(request):
+#     cur = connection.cursor()
+#     username = request.user.username
+#     sql = "SELECT book_id, count(*) as num from bookstore_order where customer_id in \
+#         (SELECT customer_id from bookstore_order where book_id = '%s' and customer_id != '%s')\
+#         and book_id != '%s'\
+#         group by book_id order by num desc"%('9780470624708',username,'9780470624708')
+#     cur.execute(sql)
+#     columns = [col[0] for col in cur.description]
+#     book_list = [dict(zip(columns, row)) for row in cur.fetchall()]
+#     return render(request,'bookstore/finish.html',{'book_list':book_list,'base_template':'base_auth.html'})
 
 
 
