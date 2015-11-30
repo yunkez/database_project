@@ -194,8 +194,8 @@ def account(request):
             FROM bookstore_customer WHERE username='%s'"%(username))
         columns = [col[0] for col in cur.description]
         user_info = [dict(zip(columns, row)) for row in cur.fetchall()]
-        cur.execute("SELECT book_id,text,score \
-            FROM bookstore_feedback WHERE customer_id='%s'"%(username))
+        cur.execute("SELECT title, text,score,date FROM bookstore_feedback,bookstore_book\
+            WHERE customer_id='%s' AND bookstore_feedback.book_id=bookstore_book.ISBN"%(username))
         columns = [col[0] for col in cur.description]
         feedback_list = [dict(zip(columns, row)) for row in cur.fetchall()]
     except:
@@ -218,5 +218,4 @@ def account(request):
     else:
         user_form = CustomerChangeForm()
     return render_to_response('bookstore/account_info.html',{'feedback_list':feedback_list,'user_info':user_info,'user_form': user_form, 'edited': edited,'base_template':'base_auth.html'},context)
-
 

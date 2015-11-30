@@ -6,36 +6,37 @@
 <h1>Books</h1>
 <form action="/bookstore/" method="POST" class="panel panel-default"> {% csrf_token %}
   <div class="panel-heading">Book Filter Panel
-    <a href="/bookstore" class="pull-right">Clear Filter</a>
+  <a href="/bookstore" class="pull-right">Clear Filter</a>
   </div>
   <div class="panel-body">
-	<div class="row">
-    <div class="col-lg-4"> 
-    <input placeholder="title" name="search_title" id="search_title" value="{{title}}"/>
-	  </div>
-	  <div class="col-lg-4"><input placeholder="author" name="search_author" id="search_author" value="{{author}}"/>
-	  </div>
-    <div class="col-lg-4"><input placeholder="publisher" name="search_publisher" id="search_publisher" value="{{publisher}}"/>
+  <div class="row">
+    <div class="col-lg-1"><h6>Search By</h6></div>
+    <div class="col-lg-2">
+    <input class="form-control" placeholder="Title" name="search_title" id="search_title" value="{{title}}" />
     </div>
-    <div class="col-lg-4"><input placeholder="subject" name="search_subject" id="search_subject" value="{{subject}}"/>
+    <div class="col-lg-2">
+    <input class="form-control" placeholder="Author" name="search_author" id="search_author" value="{{author}}"/>
     </div>
-	</div>
-
-	<div class="row">
-	<div class="col-lg-1"><h6>Order By</h6></div>
-	
-	<div class="col-lg-11">
-	
-  <input type="radio" name="optradio" id="order_1">Year</input>
-  <input type="radio" name="optradio" id="order_2">Average score</input>
-  <input type="hidden" name="orderby" id="orderby" value={{orderby}}></input>
-
-
-	</div>
-	</div>
+    <div class="col-lg-2">
+    <input class="form-control" placeholder="Publisher" name="search_publisher" id="search_publisher" value="{{publisher}}"/>
+    </div>
+    <div class="col-lg-2">
+    <input class="form-control" placeholder="Subject" name="search_subject" id="search_subject" value="{{subject}}"/>
+    </div>
   </div>
-  <button class="btn btn-primary pull-right" type="submit" onclick="SetValue()"id="search_button">Search</button>
+
+  <div class="row">
+  <div class="col-lg-1"><h6>Order By</h6></div>
+  <div class="col-lg-1"><div class="radio"><label><input type="radio" name="optradio" id="order_1"/>Year</label></div></div>
+  <div class="col-lg-2"><div class="radio"><label><input type="radio" name="optradio" id="order_2"/>Average score</label></div></div>
+  <div class="col-lg-7"><input type="hidden" name="orderby" id="orderby" value="{{orderby}}"/></div>
+  </div>
+
+  <button class="btn btn-primary pull-right" type="submit" onclick="SetValue()" id="search_button">Search</button>
+  </div>
 </form>
+
+
 <h3>Most Popular Recommendations</h3>
 <div class="list-group">
 {% for book in book_list %}

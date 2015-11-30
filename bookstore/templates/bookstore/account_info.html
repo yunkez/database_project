@@ -35,10 +35,10 @@
 <h2>My feedback</h2>
 
 {% for feedback in feedback_list %}
-<h5 class="list-group-item-heading">ISBN:{{feedback.book_id}}</h4>
+<h5 class="list-group-item-heading">book:{{feedback.title}}</h4>
 <h5 class="list-group-item-heading">score:{{feedback.score}}</h5>
 <h5 class="list-group-item-heading">text:{{feedback.text}}</h5>
-
+<h5 class="list-group-item-heading">text:{{feedback.date}}</h5>
 {% endfor %}
 
 {% endblock %}
