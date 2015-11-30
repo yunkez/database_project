@@ -16,7 +16,7 @@
   <h5 class="list-group-item-heading">By {{book.author}}</h5>
 
 <p class="starp">
-      Rating:
+      Average Rating:
       <span class="starRating">
         <input id="rating5" type="radio" name="rating" value="5">
         <label for="rating5">5</label>
@@ -42,20 +42,21 @@
 </div>
 </div>
 
-<h4>Customer Feedback</h4>
+<h5>Customer Feedbacks ({{feedback_list|length}})</h5>
 <div class="list-group" style="max-height:250px;min-height:250px;overflow-y:auto">
 {% for feedback in feedback_list %}
 <div class="list-group-item bs-callout-warning">
 <div class="row">
   <div class="col-lg-1">
     <img class="img-thumbnail" src="http://static1.squarespace.com/static/5432fb86e4b0a2c1da894800/t/54f8e985e4b0e3b41a3efe03/1425598853953/Avatar+%5Bcircle%5D.png?format=500w">
+    <h5>{{forloop.counter}}</h5>
   </div>
-  <div class="col-lg-2">
+  <div class="col-lg-1">
     <h5>{{feedback.customer_id}}'s comment</h5>
     <h6 class="text-muted">@{{feedback.date}}</h6>
     <h6 class="text-success">score: {{feedback.score}}</h6>
   </div>
-  <div class="col-lg-9">
+  <div class="col-lg-10">
     <p>{{feedback.text}}</p>
   </div>
 </div>
@@ -64,7 +65,8 @@
 </div>
 <div>
  <form action="/bookstore/feedback/" method="POST" id="FeedbackForm"> {% csrf_token %}
-   Feedback 0-10 (score): <input id="feedback_score" name="feedback_score" value=""></input>
+ <h5>My Feedback</h5>
+   Score 0-10 <input id="feedback_score" name="feedback_score" value=""></input>
     <textarea class="form-control" id="feedback_text" name="feedback_text" value="" placeholder="write down your feedback for this book."></textarea> 
     <input type="hidden" id="feedback_isbn" name="feedback_isbn" value="{{book.ISBN}}"></input>
     <button type="submit" class="btn btn-primary btn-success pull-right" name="order">Submit</button>
@@ -89,7 +91,7 @@
             <span class="glyphicon glyphicon-minus"></span>
         </button>
     </span>
-    <input data-ride="spinner" id="spinner" class="form-control input-number" value="1" data-min="1" data-max="10" name="spinner">
+    <input data-ride="spinner" id="spinner" class="form-control input-number" value="1" data-min="1" data-max="{{book.copies}}" name="spinner">
     <span class="input-group-btn">
         <button type="button" class="btn btn-default" data-value="increase" data-target="#spinner" data-toggle="spinner">
             <span class="glyphicon glyphicon-plus"></span>
