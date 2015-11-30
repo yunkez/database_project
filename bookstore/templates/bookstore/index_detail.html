@@ -39,25 +39,36 @@
   <p class="list-group-item-text">Prices: {{book.price}}</p>
   </div>
 </div>
-	
-
 </a>
 
+<h3>Customer Feedback</h3>
+<div class="list-group" style="max-height:250px;min-height:250px;overflow-y:auto">
 {% for feedback in feedback_list %}
+<div class="list-group-item bs-callout-warning">
+<div class="row">
+  <div class="col-lg-1">
+    <img class="img-circle" src=""/>
+  </div>
+  <div class="col-lg-11"></div>
+</div>
 <p>{{feedback.customer_id}}</p>
 <p>{{feedback.score}}</p>
 <p>{{feedback.text}}</p>
 <p>{{feedback.date}}</p>
+</div>
 {%  endfor %}
-
-<form action="/bookstore/feedback/" method="POST" id="FeedbackForm"> {% csrf_token %}
+</div>
+<div>
+ <form action="/bookstore/feedback/" method="POST" id="FeedbackForm"> {% csrf_token %}
 
     text: <input id="feedback_text" name="feedback_text" value=""></input>
     score: <input id="feedback_score" name="feedback_score" value=""></input>
     <input type="hidden" id="feedback_isbn" name="feedback_isbn" value="{{book.ISBN}}"></input>
     <button type="submit" class="btn btn-primary" name="order">Confirm</button>
 
-</form>
+</form> 
+</div>
+
 
 
 
