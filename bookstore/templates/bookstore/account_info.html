@@ -4,12 +4,25 @@
 
 {% block content %}
 {% if isManager %}
+	<input id="count" name="count" value="{{count}}"/>
+	<a href = "/bookstore/3/" id="search">Search</a>
+	
 	<h4>popular books</h4>
-	{{pop_book}}
+	{% for book in pop_book %}
+	ISBN: {{book.ISBN}}
+	title: {{book.title}}
+	<p></p>
+	{% endfor %}
 	<h4>popular authors</h4>
-	{{pop_author}}
+	{% for author in pop_author %}
+	{{author.author}}
+	<p></p>
+	{% endfor %}
 	<h4>popular publishers</h4>
-	{{pop_publisher}}
+	{% for publisher in pop_publisher %}
+	{{publisher.publisher}}
+	<p></p>
+	{% endfor %}
 {% else %}
 	<h2>Account</h2>
 	{% for user in user_info %}
@@ -48,4 +61,13 @@
 	<h5 class="list-group-item-heading">text:{{feedback.date}}</h5>
 	{% endfor %}
 {% endif %}
+
+
+<script type="text/javascript">
+
+$("#count").bind("change", function() {
+   $("#search").attr("href", "/bookstore/account/"+$(this).val())
+});
+
+</script>
 {% endblock %}

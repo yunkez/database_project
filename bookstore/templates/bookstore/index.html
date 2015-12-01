@@ -39,7 +39,7 @@
   </div>
 </form>
 
-<h3>Most Popular Recommendations</h3>
+<h3>{{page_title}}</h3>
 <div class="list-group">
 {% for book in book_list %}
 <div class="list-group-item bs-callout-warning">
@@ -90,7 +90,7 @@
       </div>
       <form action="/bookstore/order/" method="POST" id="OrderForm"> {% csrf_token %}
       	<div class="modal-body">
-      		<input id="order_copies" name="order_copies" value=""/>
+      		<input id="spinner" name="spinner" value=""/>
       		<p id="modalavail"></p>
       	</div>
      	<div class="modal-footer">

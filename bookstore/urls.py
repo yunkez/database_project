@@ -12,6 +12,7 @@ urlpatterns = [
     url(r'^feedback/$', views.feedback, name='feedback'),
     url(r'^myorderrecords/$', views.orderRecords, name='orderRecords'),
     url(r'^account/$', views.account, name='account'),
+    url(r'^account/([0-9])/$', views.account, name='account'),
     # url(r'^success/$', views.finish, name='finish')
 
 

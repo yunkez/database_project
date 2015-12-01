@@ -21,6 +21,7 @@ def index(request):
     subject = ""
     orderby = 1
     isManager = request.user.is_superuser
+    page_title = "Most Popular Recommendations"
     try:
         cur.execute("SELECT * FROM bookstore_book;")
         columns = [col[0] for col in cur.description]
@@ -33,6 +34,7 @@ def index(request):
         title = request.POST['search_title'] 
         subject = request.POST['search_subject']
         orderby = int(request.POST['orderby'])
+        page_title = "Your Search Results "
         if orderby==1:
             sql = "SELECT * from bookstore_book where title LIKE '%s' and author LIKE '%s' and publisher \
             LIKE '%s' and subject LIKE '%s' order by year_of_publication;" %\
@@ -47,7 +49,8 @@ def index(request):
         columns = [col[0] for col in cur.description]
         book_list = [dict(zip(columns, row)) for row in cur.fetchall()]
     return render(request, 'bookstore/index.html',{'book_list': book_list,'author':author,'subject':subject,
-            'title':title,'publisher':publisher,'orderby':orderby,'base_template':'base_auth.html','isManager':isManager})
+            'title':title,'publisher':publisher,'orderby':orderby,'base_template':'base_auth.html',
+            'page_title':page_title,'isManager':isManager})
 
 def searchValue(s):
     return "%"+s+"%"
@@ -185,10 +188,10 @@ def orderRecords(request):
     return render(request,'bookstore/order_record.html',{'order_list': order_list,'base_template':'base_auth.html'})
 
 @login_required(login_url='/login')
-def account(request):
+def account(request,count=3):
     isManager = request.user.is_superuser
     if(isManager):
-        return manager_account(request)
+        return manager_account(request,count)
     else:
         return customer_account(request)
 
@@ -229,32 +232,33 @@ def customer_account(request):
     return render_to_response('bookstore/account_info.html',{'feedback_list':feedback_list,'user_info':user_info,
         'user_form': user_form, 'edited': edited,'base_template':'base_auth.html','isManager':isManager},context)
 
-def manager_account(request):
+def manager_account(request,count):
     context = RequestContext(request)
     cur = connection.cursor()
     isManager = request.user.is_superuser
     book_list=""
+    count = int(count)
     try:
         now=datetime.datetime.now()
         date="%"+ "%s/%s" % (now.month, now.year) 
-        sql = "SELECT book_id, count(*) as num from bookstore_order where order_date like '%s'  group by book_id\
-                order by num desc;"%(date)       
+        sql = "SELECT ISBN,title FROM bookstore_book WHERE ISBN IN (SELECT book_id FROM (SELECT book_id, count(*) AS num \
+            FROM bookstore_order WHERE order_date LIKE '%s'  GROUP BY book_id ORDER BY num DESC) T);"%(date)       
         cur.execute(sql)
         columns = [col[0] for col in cur.description]
-        pop_book = [dict(zip(columns, row)) for row in cur.fetchall()][:2]
-        sql2 = "SELECT b1.author, count(*) as num from bookstore_book b1, bookstore_order o1 where b1.ISBN = o1.book_id\
-                and order_date like '%s'group by b1.author order by num desc;"%(date)   
+        pop_book = [dict(zip(columns, row)) for row in cur.fetchall()][:count]
+        sql2 = "SELECT b1.author, count(*) AS num FROM bookstore_book b1, bookstore_order o1 WHERE b1.ISBN = o1.book_id\
+                AND order_date LIKE '%s'GROUP BY b1.author ORDER BY num DESC;"%(date)   
         cur.execute(sql2)        
         columns = [col[0] for col in cur.description]
-        pop_author = [dict(zip(columns, row)) for row in cur.fetchall()][:2]
-        sql3 = "SELECT b1.publisher, count(*) as num from bookstore_book b1, bookstore_order o1 where b1.ISBN = o1.book_id\
-                and order_date like '%s' group by b1.publisher order by num desc;"%(date)
+        pop_author = [dict(zip(columns, row)) for row in cur.fetchall()][:count]
+        sql3 = "SELECT b1.publisher, count(*) AS num FROM bookstore_book b1, bookstore_order o1 WHERE b1.ISBN = o1.book_id\
+                AND order_date LIKE '%s' GROUP BY b1.publisher ORDER BY num DESC;"%(date)
         cur.execute(sql3)      
         columns = [col[0] for col in cur.description]
-        pop_publisher = [dict(zip(columns, row)) for row in cur.fetchall()][:2]
+        pop_publisher = [dict(zip(columns, row)) for row in cur.fetchall()][:count]
     except:
-        a = 1
-    return render_to_response('bookstore/account_info.html',{'pop_book':pop_book, 'pop_publisher':pop_publisher,'pop_author':pop_author,
+        return HttpResponse("error")
+    return render_to_response('bookstore/account_info.html',{'count':count,'pop_book':pop_book, 'pop_publisher':pop_publisher,'pop_author':pop_author,
         'base_template':'base_auth.html','isManager':isManager},context)
 
 
