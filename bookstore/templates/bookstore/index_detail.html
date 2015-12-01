@@ -11,12 +11,12 @@
   <div class="col-lg-2">
     <img class="img-thumbnail" src="http://ecx.images-amazon.com/images/I/51AcjY2mWgL._SX358_BO1,204,203,200_.jpg"/>
   </div>
-  <div class="col-lg-10">
+  <div class="col-lg-8">
     <h4 class="list-group-item-heading">{{book.title}}</h4>
   <h5 class="list-group-item-heading">By {{book.author}}</h5>
   <h5 class="list-group-item-heading">Score: {{book.average}}</h5>
 
-<p class="starp">
+<p class="starp hidden">
       Average Rating:
       <span class="starRating">
         <input id="rating5" type="radio" name="rating" value="5">
@@ -32,47 +32,58 @@
       </span>
     </p>
 
-    {% if isManager %}
-    <button class="btn btn-s btn-warning pull-right" data-toggle="modal" data-target="#AddModal" data-booktitle="{{book.title}}" data-bookisbn="{{book.ISBN}}" data-bookcopies="{{book.copies}}"> Add </button>
-    {% else %}
-    <button class="btn btn-s btn-warning pull-right" data-toggle="modal" data-target="#OrderModal" data-booktitle="{{book.title}}" data-bookisbn="{{book.ISBN}}" data-bookcopies="{{book.copies}}"> Order </button>
-    {% endif %}
-
   <p class="list-group-item-text">ISBN: {{book.ISBN}}</p>
   <p class="list-group-item-text">Published by {{book.publisher}} in {{book.year_of_publication}}</p>
   <p class="list-group-item-text">Keywords: {{book.keywords}}</p>
   <p class="list-group-item-text">Subject: {{book.subject}}</p>
-  <p class="list-group-item-text">{{book.copies}} copies available in {{book.format}}</p>
-  <p class="list-group-item-text">Prices: {{book.price}}</p>
+  <p class="list-group-item-text">Available in {{book.format}}</p>
+  
+  </div>
+  <div class="col-lg-2 text-center">
+    <h1 style="font-size:60px" class="text-success">${{book.price}}</h1>
+    <h5 class="text-muted">{{book.copies}} copies</h5>
+
+    {% if isManager %}
+    <button class="btn btn-s btn-warning" data-toggle="modal" data-target="#AddModal" data-booktitle="{{book.title}}" data-bookisbn="{{book.ISBN}}" data-bookcopies="{{book.copies}}"> Add </button>
+    {% else %}
+    <button class="btn btn-s btn-warning sub" data-toggle="modal" data-target="#OrderModal" data-booktitle="{{book.title}}" data-bookisbn="{{book.ISBN}}" data-bookcopies="{{book.copies}}"> Order </button>
+    {% endif %}
   </div>
 </div>
 </div>
 
-<h5>Customer Feedbacks ({{feedback_list|length}})</h5>
-<a href="/bookstore/detail/{{book.ISBN}}/1">Top 1 most useful</a>
-<a href="/bookstore/detail/{{book.ISBN}}/2">Top 2 most useful</a>
-<a href="/bookstore/detail/{{book.ISBN}}">See all reviews</a>
+<h5><span class="glyphicon glyphicon-list-alt"></span>  Customer Feedbacks ({{feedback_list|length}}) 
+<a class="pull-right" style="font-size:12px" href="/bookstore/detail/{{book.ISBN}}"> See all reviews</a>   
+<a class="pull-right" style="font-size:12px" href="/bookstore/detail/{{book.ISBN}}/2">Top 2 most useful | </a>
+
+<a class="pull-right" style="font-size:12px" href="/bookstore/detail/{{book.ISBN}}/1"> Top 1 most useful | </a>
+
+
+</h5>
+
+
 <div class="list-group" style="max-height:250px;min-height:0px;overflow-y:auto">
 {% for feedback in feedback_list %}
 <div class="list-group-item bs-callout-warning">
 <div class="row">
   <div class="col-lg-1">
+  <h5>{{forloop.counter}}
     <img class="img-thumbnail" src="http://static1.squarespace.com/static/5432fb86e4b0a2c1da894800/t/54f8e985e4b0e3b41a3efe03/1425598853953/Avatar+%5Bcircle%5D.png?format=500w">
-    <h5>{{forloop.counter}}</h5>
+    </h5>
   </div>
-  <div class="col-lg-1">
+  <div class="col-lg-2">
     <h5>{{feedback.customer_id}}'s comment</h5>
     <h6 class="text-muted">@{{feedback.date}}</h6>
     <h6 class="text-success">score: {{feedback.score}}</h6>
   </div>
-  <div class="col-lg-8">
+  <div class="col-lg-7">
     <p>{{feedback.text}}</p>
   </div>
   <div class="col-lg-2">
 <form action="/bookstore/vote/{{book.ISBN}}/" method="POST" id="voteForm"> {% csrf_token %}
 <input type="hidden" id="vote_rater" name="vote_rater" value="{{feedback.customer_id}}"></input>
 
-<p>Rating this book:</p>
+<p>Rating this book</p>
 <button class="btn btn-primary btn-xs" style="width:90px" type="submit" id="vote_score" name="vote_score" value='2'>
   <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span> very useful
 </button><br>
@@ -91,7 +102,7 @@
 </div>
 <div>
  <form action="/bookstore/feedback/" method="POST" id="FeedbackForm"> {% csrf_token %}
- <h5>My Feedback</h5>
+ <h5><span class="glyphicon glyphicon-star"></span> My Feedback</h5>
    Score 0-10 <input id="feedback_score" name="feedback_score" value=""></input>
     <textarea class="form-control" id="feedback_text" name="feedback_text" value="" placeholder="write down your feedback for this book."></textarea> 
     <input type="hidden" id="feedback_isbn" name="feedback_isbn" value="{{book.ISBN}}"></input>
@@ -121,7 +132,7 @@
           </button>
         </span>
         </div>
-          <p id="modalavail"></p>
+          <h5 class="list-group-item-text" id="modalavail"></h5>
         </div>
       <div class="modal-footer">
           <input type="hidden" id="order_isbn" name="order_isbn"/>
@@ -142,8 +153,8 @@
       </div>
       <form action="/bookstore/add/" method="POST" id="OrderForm"> {% csrf_token %}
         <div class="modal-body">
-          <input id="add_copies" name="add_copies" value=""/>
-          <p id="modalavail"></p>
+          <h5 class="list-group-item-text">Add <input id="add_copies" name="add_copies" value=""/> copies | <span class="list-group-item-text" id="modalavail"></span></h5>
+          
         </div>
       <div class="modal-footer">
           <input type="hidden" id="add_isbn" name="add_isbn"/>

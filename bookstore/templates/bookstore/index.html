@@ -3,10 +3,11 @@
 {% block title %}Books{% endblock %}
 
 {% block content %}
-<h1>Books</h1>
+<h1>Books
 {% if isManager %}
-  <a href="/bookstore/addnewbook">Add new book</a>
+  <a style="font-size:12px" href="/bookstore/addnewbook">New Book Arrival</a>
 {% endif %}
+</h1>
 <form action="/bookstore/" method="POST" class="panel panel-default"> {% csrf_token %}
   <div class="panel-heading">Book Filter Panel
   <a href="/bookstore" class="pull-right">Clear Filter</a>
@@ -102,7 +103,7 @@
           </button>
         </span>
         </div>
-          <p id="modalavail"></p>
+          <h5 class="list-group-item-text" id="modalavail"></h5>
         </div>
       <div class="modal-footer">
           <input type="hidden" id="order_isbn" name="order_isbn"/>
@@ -119,9 +120,6 @@
 {% endfor %}
 </div>
 
-
-
-
 <div class="modal fade" id="AddModal" tabindex="-1" role="dialog" aria-labelledby="AddModalLabel">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -130,8 +128,8 @@
       </div>
       <form action="/bookstore/add/" method="POST" id="OrderForm"> {% csrf_token %}
         <div class="modal-body">
-          <input id="add_copies" name="add_copies" value=""/>
-          <p id="modalavail"></p>
+          <h5 class="list-group-item-text">Add <input id="add_copies" name="add_copies" value=""/> copies | <span class="list-group-item-text" id="modalavail"></span></h5>
+          
         </div>
       <div class="modal-footer">
           <input type="hidden" id="add_isbn" name="add_isbn"/>
@@ -187,7 +185,6 @@ function SetValue() {
     document.getElementById("orderby").value = 0;
   }     
 }
-
 
 
 </script>

@@ -12,18 +12,20 @@
 </form>
 
 {% else %}
-<form action="/bookstore/addnewbook/" method="post" id="book_form" enctype="multipart/form-data"> 
+<form action="/bookstore/addnewbook/" class="form-signin" method="post" id="book_form" enctype="multipart/form-data"> 
 {% csrf_token %}
-<h2 class="form-signin-heading">Create New Book</h2>
-<!--    {% for field in user_form %}
-   <h6 style="color:red">{{field.errors}}</h6>
-   <label for="{{ field.id_for_label }}" class="sr-only">{{ field.label_tag }}</label>
-   {{field}}
-   {% endfor %} -->
-   {{ book_form.as_p }}
+<h2 class="form-signin-heading">New Book Arrival</h2><br>
+
+   {% for field in book_form %}<h6 style="color:red">{{field.errors}}</h6>
+   <div class="row">
+   		<div class="col-lg-3"><label for="{{ field.id_for_label }}">{{ field.label_tag }}</label></div>
+   		<div class="col-lg-9">{{field}}</div>
+   </div>
+   {% endfor %}
+   <!-- {{ book_form.as_p }} -->
+   <br>
    <input class="btn btn-primary pull-right" type="submit" name="submit" value="Save" />
    <a class="btn btn-default pull-right" href="/bookstore">Cancel</a>
-   
 </form>
 {% endif %}
 {% endblock %}

@@ -51,3 +51,15 @@ class BookCreationForm(forms.ModelForm):
 	class Meta:
 		model = Book
 		fields = '__all__'
+		# widgets = {
+  #           'ISBN': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'ISBN','required': True}),
+  #           'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'book title','required': True}),
+  #           'publisher': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'publisher name','required': True}),
+  #           'author': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'author name','required': True}),
+  #           'subject': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'subject','required': True}),
+  #           'keywords': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'keywords','required': True}),
+  #           'format': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'format','required': True}),
+  #           'year_of_publication': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'publication year','required': True}),
+  #           'price': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'book price','required': True}),
+  #           'copies': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'number of copies','required': True}),
+  #       }
