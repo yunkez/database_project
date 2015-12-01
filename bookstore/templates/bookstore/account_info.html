@@ -27,32 +27,32 @@
 
 <h2>My Account Information</h2> 
 <div class="well" style="background:white">
-<h4><img style="width:50px;" class="img-thumbnail" src="http://static1.squarespace.com/static/5432fb86e4b0a2c1da894800/t/54f8e985e4b0e3b41a3efe03/1425598853953/Avatar+%5Bcircle%5D.png?format=500w">  Profile  <a style="font-size:12px" type="button" id="editlink" href="#">edit user profile</a></h4>
-    <div id="accountInfo" class="show" style="height:200px">
+<a class="pull-right" style="font-size:12px" type="button" id="editlink" href="#">edit user profile</a>
+<h4><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Profile </h4>
+
+    <div id="accountInfo" class="show">
 		{% for user in user_info %}
-		<div class="row">
-			<div class="col-lg-2"><h6 class="text-muted">username</h6></div>
-			<div class="col-lg-10"><h6>{{user.username}}</h6></div>
-		</div>
-		<div class="row">
-			<div class="col-lg-2"><h6 class="text-muted">fullname</h6></div>
-			<div class="col-lg-10"><h6>{{user.fullname}}</h6></div>
-		</div>
-		<div class="row">
-			<div class="col-lg-2"><h6 class="text-muted">phone number</h6></div>
-			<div class="col-lg-10"><h6>{{user.phone}}</h6></div>
-		</div>
-		<div class="row">
-			<div class="col-lg-2"><h6 class="text-muted">card number</h6></div>
-			<div class="col-lg-10"><h6>{{user.card}}</h6></div>
-		</div>
-		<div class="row">
-			<div class="col-lg-2"><h6 class="text-muted">address</h6></div>
-			<div class="col-lg-10"><h6>{{user.address}}</h6></div>
-		</div>
+		<div class="list-group-item">
+	    			<div class="row">
+	    				<div class="col-lg-2">
+	    					<h5 class="list-group-item-heading text-muted">Uername</h5>
+							<h5 class="list-group-item-heading text-muted">Fullname</h5>
+							<h5 class="list-group-item-heading text-muted">Phone Number</h5>
+							<h5 class="list-group-item-heading text-muted">Card Number</h5>
+							<h5 class="list-group-item-heading text-muted">Address</h5>
+	    				</div>
+	    				<div class="col-lg-10">
+	    					<h5 class="list-group-item-heading">{{user.username}}</h5>
+							<h5 class="list-group-item-heading">{{user.fullname}}</h5>
+							<h5 class="list-group-item-heading">{{user.phone}}</h5>
+							<h5 class="list-group-item-heading">{{user.card}}</h5>
+							<h5 class="list-group-item-heading">{{user.address}}</h5>
+	    				</div>
+	    			</div>
+	    			</div>
 		{% endfor %}
 	</div>
-	<div id="editAccountInfo" class="hidden" style="height:200px">	
+	<div id="editAccountInfo" class="hidden">	
 		<form id="user_form" method="post" action="/bookstore/account/" enctype="multipart/form-data">
 		    {% csrf_token %}
 		    {% for field in user_form %}
@@ -65,33 +65,67 @@
 		    <input class="btn btn-success" type="submit" name="submit" value="Save" />
 		</form>
 	</div>
+
 <hr>
+<a id="togglefeedbacklist" type="button" class="pull-right" style="font-size:12px;cursor:pointer">hide</a>
+<h4><span class="glyphicon glyphicon-th-list" aria-hidden="true"></span> Feedbacks ({{feedback_list|length}})</h4>
 
-<h4><span class="glyphicon glyphicon-th-list" aria-hidden="true"></span> Feedbacks <a style="font-size:12px">hide</a></h4>
-
-    <div style="max-height:200px">
+    <div id="feedbacklist" style="max-height:200px;overflow-y:auto">
     	{%if feedback_list|length > 0%}
+    		<div class="list-group">
 	    	{% for feedback in feedback_list %}
-				<h5 class="list-group-item-heading">book:{{feedback.title}}</h4>
-				<h5 class="list-group-item-heading">score:{{feedback.score}}</h5>
-				<h5 class="list-group-item-heading">text:{{feedback.text}}</h5>
-				<h5 class="list-group-item-heading">text:{{feedback.date}}</h5>
+	    		<div class="list-group-item">
+	    			<div class="row">
+	    				<div class="col-lg-2">
+	    					<h5 class="list-group-item-heading text-muted">Book</h5>
+							<h5 class="list-group-item-heading text-muted">Score</h5>
+							<h5 class="list-group-item-heading text-muted">Text</h5>
+							<h5 class="list-group-item-heading text-muted">Date</h5>
+	    				</div>
+	    				<div class="col-lg-10">
+	    					<h5 class="list-group-item-heading">{{feedback.title}}</h5>
+							<h5 class="list-group-item-heading">{{feedback.score}}</h5>
+							<h5 class="list-group-item-heading">{{feedback.text}}</h5>
+							<h5 class="list-group-item-heading">{{feedback.date}}</h5>
+	    				</div>
+	    			</div>
+				</div>
 			{% endfor %}
+			</div>
     	{%else%}
     		<h5>You haven't written a feedback.</h5>
     	{%endif%}
     </div>
 	
 <hr>
-<h4>Ratings</h4>
+<a type="button" id="toggleratelist" class="pull-right" style="font-size:12px;cursor:pointer">hide</a>
+<h4><span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span> Ratings ({{rate_list|length}})</h4>
 
-	{% for rating in rate_list %}
-	<h5 class="list-group-item-heading">user:{{rating.customer_id}}</h4>
-	<h5 class="list-group-item-heading">book::{{rating.title}}</h5>
-	<h5 class="list-group-item-heading">text:{{rating.text}}</h5>
-	<h5 class="list-group-item-heading">rating:{{rating.rate}}</h5>
-	{% endfor %}
+<div id="ratelist" style="max-height:200px;overflow-y:auto">
+	{%if rate_list|length > 0%}
+		{% for rating in rate_list %}
+				 <div class="list-group-item">
+	    			<div class="row">
+	    				<div class="col-lg-2">
+	    					<h5 class="list-group-item-heading text-muted">User</h5>
+							<h5 class="list-group-item-heading text-muted">Book</h5>
+							<h5 class="list-group-item-heading text-muted">Text</h5>
+							<h5 class="list-group-item-heading text-muted">Rating</h5>
+	    				</div>
+	    				<div class="col-lg-10">
+	    					<h5 class="list-group-item-heading">{{rating.customer_id}}</h5>
+							<h5 class="list-group-item-heading">{{rating.title}}</h5>
+							<h5 class="list-group-item-heading">{{rating.text}}</h5>
+							<h5 class="list-group-item-heading">{{rating.rate}}</h5>
+	    				</div>
+	    			</div>
+				</div>
 
+		{% endfor %}
+	{%else%}
+    	<h5>You haven't rated a feedback.</h5>
+    {%endif%}
+</div>
 </div>
 <hr>
 
@@ -115,6 +149,29 @@ $('#editlink').on('click', function () {
 	}
     $("#editAccountInfo").toggleClass('hidden');
  });
+
+$('#toggleratelist').on('click', function(){
+	var text = $('#toggleratelist').text();
+	$(this).text(text == 'hide' ? 'show' : 'hide');
+	if (text == 'show'){
+		$("#ratelist").removeClass('hidden');
+	}
+	else{
+		$("#ratelist").addClass('hidden');
+	}
+});
+
+
+$('#togglefeedbacklist').on('click', function(){
+	var text = $('#togglefeedbacklist').text();
+	$(this).text(text == 'hide' ? 'show' : 'hide');
+	if (text == 'show'){
+		$("#feedbacklist").removeClass('hidden');
+	}
+	else{
+		$("#feedbacklist").addClass('hidden');
+	}
+});
 
 </script>
 {% endblock %}
