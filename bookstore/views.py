@@ -69,9 +69,9 @@ def detail(request,isbn,count=0):
         columns = [col[0] for col in cur.description]
         feedback_list = [dict(zip(columns, row)) for row in cur.fetchall()]
     else:
-        sql = "SELECT f1.* FROM bookstore_feedback f1 JOIN (SELECT r1.customer_id, r1.book_id, AVG(r1.rate) \
-            AS average FROM bookstore_rating r1 GROUP BY r1.book_id, r1.customer_id HAVING book_id = '%s') AS temp \
-            ORDER BY temp.average DESC;"%(isbn)
+        sql = "SELECT f.*,T.average FROM bookstore_feedback f,(SELECT rater_id, book_id, AVG(rate) AS average \
+            FROM bookstore_rating GROUP BY book_id, rater_id HAVING book_id = '%s' \
+            ORDER BY average DESC) T WHERE f.customer_id=T.rater_id AND f.book_id=T.book_id;"%(isbn)
         cur.execute(sql)
         columns = [col[0] for col in cur.description]
         feedback_list = [dict(zip(columns, row)) for row in cur.fetchall()][:count]
