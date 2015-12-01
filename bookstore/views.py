@@ -59,6 +59,9 @@ def searchValue(s):
 def detail(request,isbn):
     cur = connection.cursor()
     try:
+        # sql = "SELECT f1.* FROM bookstore_feedback f1 JOIN (SELECT r1.customer_id, r1.book_id, AVG(r1.rate) \
+        #     AS average FROM bookstore_rating r1 GROUP BY r1.book_id, r1.customer_id HAVING book_id = '%s') AS temp \
+        #     ORDER BY temp.average DESC;"%(isbn)
         cur.execute("SELECT * FROM bookstore_feedback WHERE book_id='%s';"%(isbn))
         columns = [col[0] for col in cur.description]
         feedback_list = [dict(zip(columns, row)) for row in cur.fetchall()]
@@ -79,9 +82,12 @@ def feedback(request):
     username = request.user.username
     now=datetime.datetime.now()
     date="%s/%s/%s" % (now.day, now.month, now.year)
-    sql = "INSERT INTO bookstore_feedback VALUES ('%s','%s','%s','%s','%s')"%\
-            (ISBN,username, text,score,date)
-    cur.execute(sql)
+    try:
+        sql = "INSERT INTO bookstore_feedback VALUES ('%s','%s','%s','%s','%s')"%\
+                (ISBN,username, text,score,date)
+        cur.execute(sql)
+    except:
+        return HttpResponse("Invalid request")
     return HttpResponseRedirect('/bookstore/detail/'+ISBN)
 
 def user_login(request):
@@ -210,9 +216,16 @@ def customer_account(request):
             WHERE customer_id='%s' AND bookstore_feedback.book_id=bookstore_book.ISBN"%(username))
         columns = [col[0] for col in cur.description]
         feedback_list = [dict(zip(columns, row)) for row in cur.fetchall()]
+        sql= "SELECT f.customer_id,f.text,b.title,r.rate FROM bookstore_rating r,bookstore_feedback f,bookstore_book b\
+                    WHERE r.customer_id = '%s' AND r.rater_id=f.customer_id AND r.book_id=f.book_id \
+                    AND r.book_id=b.ISBN;"%(username)
+        cur.execute(sql)
+        columns = [col[0] for col in cur.description]
+        rate_list = [dict(zip(columns, row)) for row in cur.fetchall()]
     except:
         user_info = ""
         feedback_list = ""
+        rate_list = ""
     if request.method == 'POST':
         user_form = CustomerChangeForm(data=request.POST)
         if user_form.is_valid():
@@ -230,7 +243,8 @@ def customer_account(request):
     else:
         user_form = CustomerChangeForm()
     return render_to_response('bookstore/account_info.html',{'feedback_list':feedback_list,'user_info':user_info,
-        'user_form': user_form, 'edited': edited,'base_template':'base_auth.html','isManager':isManager},context)
+        'user_form': user_form, 'rate_list':rate_list,'edited': edited,'base_template':'base_auth.html',
+        'isManager':isManager},context)
 
 def manager_account(request,count):
     context = RequestContext(request)

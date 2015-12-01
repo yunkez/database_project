@@ -60,6 +60,16 @@
 	<h5 class="list-group-item-heading">text:{{feedback.text}}</h5>
 	<h5 class="list-group-item-heading">text:{{feedback.date}}</h5>
 	{% endfor %}
+
+
+	<h2>My rating</h2>
+
+	{% for rating in rate_list %}
+	<h5 class="list-group-item-heading">user:{{rating.customer_id}}</h4>
+	<h5 class="list-group-item-heading">book::{{rating.title}}</h5>
+	<h5 class="list-group-item-heading">text:{{rating.text}}</h5>
+	<h5 class="list-group-item-heading">rating:{{rating.rate}}</h5>
+	{% endfor %}
 {% endif %}
 
 
