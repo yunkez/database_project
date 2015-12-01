@@ -108,28 +108,24 @@
       </div>
       <form action="/bookstore/order/" method="POST" id="OrderForm"> {% csrf_token %}
         <div class="modal-body">
-        <div class="input-group">
-
-</div>
-<div class="input-group">
-    <span class="input-group-btn">
-        <button type="button" class="btn btn-default" data-value="decrease" data-target="#spinner" data-toggle="spinner">
+          <div class="input-group">
+            <span class="input-group-btn">
+          <button type="button" class="btn btn-default" data-value="decrease" data-target="#spinner" data-toggle="spinner">
             <span class="glyphicon glyphicon-minus"></span>
         </button>
-    </span>
-    <input data-ride="spinner" id="spinner" class="form-control input-number" value="1" data-min="1" data-max="{{book.copies}}" name="spinner">
-    <span class="input-group-btn">
+            </span>
+      <input data-ride="spinner" id="spinner" class="form-control input-number" value="1" data-min="1" data-max="{{book.copies}}" name="spinner">
+      <span class="input-group-btn">
         <button type="button" class="btn btn-default" data-value="increase" data-target="#spinner" data-toggle="spinner">
             <span class="glyphicon glyphicon-plus"></span>
-        </button>
-    </span>
-</div>
-
+          </button>
+        </span>
+        </div>
           <p id="modalavail"></p>
         </div>
       <div class="modal-footer">
-          <input type="hidden" id="order_isbn" name="order_isbn"></input>
-          <input type="hidden" id="order_title" name="order_title"></input>
+          <input type="hidden" id="order_isbn" name="order_isbn"/>
+          <input type="hidden" id="order_title" name="order_title"/>
           <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
           <button type="submit" class="btn btn-primary" name="order">Confirm</button>
         </div>

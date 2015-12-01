@@ -4,25 +4,83 @@
 
 {% block content %}
 {% if isManager %}
-	<input id="count" name="count" value="{{count}}"/>
-	<a href = "/bookstore/3/" id="search">Search</a>
-	
-	<h4>popular books</h4>
-	{% for book in pop_book %}
-	ISBN: {{book.ISBN}}
-	title: {{book.title}}
-	<p></p>
-	{% endfor %}
-	<h4>popular authors</h4>
-	{% for author in pop_author %}
-	{{author.author}}
-	<p></p>
-	{% endfor %}
-	<h4>popular publishers</h4>
-	{% for publisher in pop_publisher %}
+<!-- 	<input id="count" name="count" value="{{count}}"/>
+	<a href = "/bookstore/3/" id="search">Search</a> -->
+
+	<h2>Bookstore Statistics</h2> 
+	<br>
+	<div class="list-group">	
+	<div class="list-group-item">
+	<div class="row">
+		<div class="col-lg-2"><h5 class="list-group-item-text">Popular Books Top</h5></div>
+		<div class="col-lg-2"><div class="input-group">
+      <input id="count" name="count" value="{{count}}" type="number" class="form-control"/>
+      <a class="input-group-addon glyphicon glyphicon-search" href = "/bookstore/3/" id="search"></a>
+    </div></div>
+		<div class="col-lg-8"></div>
+	</div>
+	</div>
+    {%if pop_book|length > 0%}
+	    {% for book in pop_book %}
+	    <div class="list-group-item">
+		ISBN: {{book.ISBN}}
+		title: {{book.title}}
+		<p></p>
+		</div>
+		{% endfor %}
+	{%else%}
+	<div class="list-group-item">
+		<h5 class="list-group-item-text">Empty</h5>
+		</div>
+	{%endif%}
+	</div>
+	<br>
+	<div class="list-group">	
+	<div class="list-group-item">
+	<div class="row">
+		<div class="col-lg-2"><h5 class="list-group-item-text">Popular Authors Top</h5></div>
+		<div class="col-lg-2"><div class="input-group">
+      <input id="count" name="count" value="{{count}}" type="number" class="form-control"/>
+      <a class="input-group-addon glyphicon glyphicon-search" href = "/bookstore/3/" id="search"></a>
+    </div></div>
+		<div class="col-lg-8"></div>
+	</div>
+	</div>
+    {%if pop_author|length > 0%}
+	    {% for author in pop_author %}
+			{{author.author}}
+			<p></p>
+			{% endfor %}
+	{%else%}
+		<div class="list-group-item">
+			<h5 class="list-group-item-text">Empty</h5>
+		</div>
+	{%endif%}
+	</div>
+
+	<br>
+	<div class="list-group">	
+	<div class="list-group-item">
+	<div class="row">
+		<div class="col-lg-2"><h5 class="list-group-item-text">Popular Publishers Top</h5></div>
+		<div class="col-lg-2"><div class="input-group">
+      <input id="count" name="count" value="{{count}}" type="number" class="form-control"/>
+      <a class="input-group-addon glyphicon glyphicon-search" href = "/bookstore/3/" id="search"></a>
+    </div></div>
+		<div class="col-lg-8"></div>
+	</div>
+	</div>
+    {%if pop_publisher|length > 0%}
+	    {% for publisher in pop_publisher %}
 	{{publisher.publisher}}
 	<p></p>
 	{% endfor %}
+	{%else%}
+		<div class="list-group-item">
+			<h5 class="list-group-item-text">Empty</h5>
+		</div>
+	{%endif%}
+	</div>
 {% else %}
 
 <h2>My Account Information</h2> 

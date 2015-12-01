@@ -80,8 +80,6 @@
   </div>
 </div>
 </div>
-{% endfor %}
-</div>
 
 <div class="modal fade" id="OrderModal" tabindex="-1" role="dialog" aria-labelledby="OrderModalLabel">
   <div class="modal-dialog" role="document">
@@ -90,20 +88,39 @@
         <h4 class="modal-title" id="OrderModalLabel"></h4>
       </div>
       <form action="/bookstore/order/" method="POST" id="OrderForm"> {% csrf_token %}
-      	<div class="modal-body">
-      		<input id="spinner" name="spinner" value=""/>
-      		<p id="modalavail"></p>
-      	</div>
-     	<div class="modal-footer">
-      		<input type="hidden" id="order_isbn" name="order_isbn"/>
-      		<input type="hidden" id="order_title" name="order_title"/>
-        	<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        	<button type="submit" class="btn btn-primary" name="order">Confirm</button>
-      	</div>
+        <div class="modal-body">
+           <div class="input-group">
+            <span class="input-group-btn">
+          <button type="button" class="btn btn-default" data-value="decrease" data-target="#spinner" data-toggle="spinner">
+            <span class="glyphicon glyphicon-minus"></span>
+        </button>
+            </span>
+      <input data-ride="spinner" id="spinner" class="form-control input-number" value="1" data-min="1" data-max="{{book.copies}}" name="spinner">
+      <span class="input-group-btn">
+        <button type="button" class="btn btn-default" data-value="increase" data-target="#spinner" data-toggle="spinner">
+            <span class="glyphicon glyphicon-plus"></span>
+          </button>
+        </span>
+        </div>
+          <p id="modalavail"></p>
+        </div>
+      <div class="modal-footer">
+          <input type="hidden" id="order_isbn" name="order_isbn"/>
+          <input type="hidden" id="order_title" name="order_title"/>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary" name="order">Confirm</button>
+        </div>
       </form>
     </div>
   </div>
 </div>
+
+
+{% endfor %}
+</div>
+
+
+
 
 <div class="modal fade" id="AddModal" tabindex="-1" role="dialog" aria-labelledby="AddModalLabel">
   <div class="modal-dialog" role="document">
