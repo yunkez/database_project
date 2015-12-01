@@ -3,8 +3,8 @@
 {% block title %}Books{% endblock %}
 
 {% block content %}
-<h2>Order Records</h2>
-	<table class="table table-striped">
+<h2>My Order Records</h2>
+	<table id="orderRecord" class="table table-striped">
 	<tr>
         <th>order id</th>
         <th>isbn</th>
@@ -24,4 +24,9 @@
 	</tr>
 
 	{% endfor %}
+<script type="text/javascript">
+	$(document).ready(function() {
+		$('#orderRecord').DataTable();
+	});
+</script>
 {% endblock %}

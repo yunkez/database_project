@@ -43,7 +43,7 @@
 </div>
 
 <h5>Customer Feedbacks ({{feedback_list|length}})</h5>
-<div class="list-group" style="max-height:250px;min-height:250px;overflow-y:auto">
+<div class="list-group" style="max-height:250px;min-height:0px;overflow-y:auto">
 {% for feedback in feedback_list %}
 <div class="list-group-item bs-callout-warning">
 <div class="row">
@@ -62,9 +62,21 @@
   <div class="col-lg-2">
     <form action="/bookstore/vote/{{book.ISBN}}/" method="POST" id="voteForm"> {% csrf_token %}
       <input type="hidden" id="vote_rater" name="vote_rater" value="{{feedback.customer_id}}"></input>
-      <button type="submit" id="vote_score" name="vote_score" value='0'>useless</button>
-      <button type="submit" id="vote_score" name="vote_score" value='1'>useful</button>
-      <button type="submit" id="vote_score" name="vote_score" value='2'>very useful</button>
+
+<p>Rating this book:</p>
+<button type="button" class="btn btn-primary btn-xs" style="width:90px" type="submit" id="vote_score" name="vote_score" value='2'>
+  <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span> very useful
+</button><br>
+<button type="button" class="btn btn-warning btn-xs" style="width:90px" type="submit" id="vote_score" name="vote_score" value='1'>
+  <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span> useful
+</button><br>
+      <button type="button" class="btn btn-default btn-xs" style="width:90px" type="submit" id="vote_score" name="vote_score" value='0'>
+  <span class="glyphicon glyphicon-thumbs-down" aria-hidden="true"></span> useless
+</button>
+
+
+
+
     </form>
   </div>
 </div>

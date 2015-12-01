@@ -39,7 +39,7 @@
   </div>
 </form>
 
-<h3>{{page_title}}</h3>
+<h3>{{page_title}} ({{book_list|length}})</h3>
 <div class="list-group">
 {% for book in book_list %}
 <div class="list-group-item bs-callout-warning">
@@ -51,7 +51,7 @@
   <h5 class="list-group-item-heading">By {{book.author}}</h5>
 
 <p class="starp">
-      Rating:
+      Average Score:
       <span class="starRating">
         <input id="rating5" type="radio" name="rating" value="5">
         <label for="rating5">5</label>
