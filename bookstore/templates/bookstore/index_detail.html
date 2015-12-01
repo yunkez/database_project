@@ -56,8 +56,16 @@
     <h6 class="text-muted">@{{feedback.date}}</h6>
     <h6 class="text-success">score: {{feedback.score}}</h6>
   </div>
-  <div class="col-lg-10">
+  <div class="col-lg-8">
     <p>{{feedback.text}}</p>
+  </div>
+  <div class="col-lg-2">
+    <form action="/bookstore/vote/{{book.ISBN}}/" method="POST" id="voteForm"> {% csrf_token %}
+      <input type="hidden" id="vote_rater" name="vote_rater" value="{{feedback.customer_id}}"></input>
+      <button type="submit" id="vote_score" name="vote_score" value='0'>useless</button>
+      <button type="submit" id="vote_score" name="vote_score" value='1'>useful</button>
+      <button type="submit" id="vote_score" name="vote_score" value='2'>very useful</button>
+    </form>
   </div>
 </div>
 </div>
@@ -125,5 +133,6 @@ $('#OrderModal').on('show.bs.modal', function (event) {
   document.getElementById("order_isbn").value=book_isbn
   document.getElementById("order_title").value=book_title
 });
+
 </script>
 {% endblock %}

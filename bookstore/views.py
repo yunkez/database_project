@@ -82,7 +82,7 @@ def feedback(request):
     sql = "INSERT INTO bookstore_feedback VALUES ('%s','%s','%s','%s','%s')"%\
             (ISBN,username, text,score,date)
     cur.execute(sql)
-    return HttpResponseRedirect('/bookstore/'+ISBN)
+    return HttpResponseRedirect('/bookstore/detail/'+ISBN)
 
 def user_login(request):
     context = RequestContext(request)
@@ -306,4 +306,32 @@ def addNewBook(request):
     else:
         book_form = BookCreationForm()
     return render_to_response('bookstore/add_book.html',{'book_form': book_form,'created':created,'base_template':'base_auth.html'},context)
+
+
+@login_required(login_url='/login')
+def vote(request,isbn):
+    cur = connection.cursor()
+    if request.method == 'POST':
+        score = request.POST['vote_score']
+        rater = request.POST['vote_rater']
+        username = request.user.username
+        if username != rater:
+            try:
+                sql = "INSERT INTO bookstore_rating VALUES ('%s','%s','%s','%s')"%(username, rater, isbn, score)
+                cur.execute(sql)
+                return HttpResponseRedirect("/bookstore/detail/%s"%isbn)
+            except:
+                return HttpResponse("You cannot vote twice!")
+        else:
+            return HttpResponse("You cannot vote for yourself!")
+    
+
+
+
+
+
+
+
+
+
 
