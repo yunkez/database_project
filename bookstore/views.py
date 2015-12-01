@@ -23,9 +23,10 @@ def index(request):
     isManager = request.user.is_superuser
     page_title = "Most Popular Recommendations"
     try:
-        cur.execute("SELECT * FROM bookstore_book;")
+        cur.execute("SELECT b.*,T.average FROM bookstore_book b,(SELECT book_id, AVG(score) AS average\
+         FROM bookstore_feedback GROUP BY book_id) T WHERE b.ISBN=T.book_id ORDER BY T.average DESC;")
         columns = [col[0] for col in cur.description]
-        book_list = [dict(zip(columns, row)) for row in cur.fetchall()]
+        book_list = [dict(zip(columns, row)) for row in cur.fetchall()][:10]
     except:
         book_list = ""
     if request.method == 'POST':
@@ -41,7 +42,7 @@ def index(request):
             (searchValue(title),searchValue(author),searchValue(publisher),searchValue(subject))
     
         else:
-            sql ="SELECT b1.* from bookstore_book b1 join bookstore_feedback where b1.title LIKE '%s' \
+            sql ="SELECT b1.*,AVG(score) AS average from bookstore_book b1 join bookstore_feedback where b1.title LIKE '%s' \
             and b1.author LIKE '%s' and b1.publisher LIKE'%s' and b1.subject LIKE '%s' \
             group by b1.ISBN order by AVG(score);"%\
             (searchValue(title),searchValue(author),searchValue(publisher),searchValue(subject))
@@ -60,7 +61,8 @@ def detail(request,isbn,count=0):
     cur = connection.cursor()
     isManager = request.user.is_superuser
 
-    cur.execute("SELECT * FROM bookstore_book WHERE ISBN='%s';"%(isbn))
+    cur.execute("SELECT b.*,T.average from bookstore_book b,(SELECT book_id, AVG(score) AS average \
+        FROM bookstore_feedback where book_id='%s') T WHERE b.ISBN=T.book_id;"%(isbn))
     columns = [col[0] for col in cur.description]
     book = [dict(zip(columns, row)) for row in cur.fetchall()]
     count = int(count)
