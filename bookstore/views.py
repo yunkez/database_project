@@ -56,22 +56,25 @@ def searchValue(s):
     return "%"+s+"%"
 
 @login_required(login_url='/login')
-def detail(request,isbn):
+def detail(request,isbn,count=0):
     cur = connection.cursor()
     isManager = request.user.is_superuser
-    try:
-        # sql = "SELECT f1.* FROM bookstore_feedback f1 JOIN (SELECT r1.customer_id, r1.book_id, AVG(r1.rate) \
-        #     AS average FROM bookstore_rating r1 GROUP BY r1.book_id, r1.customer_id HAVING book_id = '%s') AS temp \
-        #     ORDER BY temp.average DESC;"%(isbn)
+
+    cur.execute("SELECT * FROM bookstore_book WHERE ISBN='%s';"%(isbn))
+    columns = [col[0] for col in cur.description]
+    book = [dict(zip(columns, row)) for row in cur.fetchall()]
+    count = int(count)
+    if count==0:
         cur.execute("SELECT * FROM bookstore_feedback WHERE book_id='%s';"%(isbn))
         columns = [col[0] for col in cur.description]
         feedback_list = [dict(zip(columns, row)) for row in cur.fetchall()]
-        cur.execute("SELECT * FROM bookstore_book WHERE ISBN='%s';"%(isbn))
+    else:
+        sql = "SELECT f1.* FROM bookstore_feedback f1 JOIN (SELECT r1.customer_id, r1.book_id, AVG(r1.rate) \
+            AS average FROM bookstore_rating r1 GROUP BY r1.book_id, r1.customer_id HAVING book_id = '%s') AS temp \
+            ORDER BY temp.average DESC;"%(isbn)
+        cur.execute(sql)
         columns = [col[0] for col in cur.description]
-        book = [dict(zip(columns, row)) for row in cur.fetchall()]
-    except:
-        book = ""
-        feedback_list = "" 
+        feedback_list = [dict(zip(columns, row)) for row in cur.fetchall()][:count]
     return render(request, 'bookstore/index_detail.html',{'feedback_list':feedback_list,'book': book[0],
         'isManager':isManager,'base_template':'base_auth.html'})
 
