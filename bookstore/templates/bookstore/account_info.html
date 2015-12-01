@@ -25,56 +25,65 @@
 	{% endfor %}
 {% else %}
 
-<h2>Account</h2> 
-
-<div class="well" style="height:300px">
-<h6><a type="button" id="editlink" href="#">edit account info</a></h6>
-    <div id="accountInfo" class="show">
-	{% for user in user_info %}
-	<h5 class="list-group-item-heading">username {{user.username}}</h5>
-	<h5 class="list-group-item-heading">fullname: {{user.fullname}}</h5>
-	<h5 class="list-group-item-heading">phone number: {{user.phone}}</h5>
-	<h5 class="list-group-item-heading">card number: {{user.card}}</h5>
-	<h5 class="list-group-item-heading">address: {{user.address}}</h5>
-	{% endfor %}
-	</div>
-	<div id="editAccountInfo" class="hidden">
-	{% if edited %}
+<h2>My Account Information</h2> 
+<div class="well" style="background:white">
+<h4><img style="width:50px;" class="img-thumbnail" src="http://static1.squarespace.com/static/5432fb86e4b0a2c1da894800/t/54f8e985e4b0e3b41a3efe03/1425598853953/Avatar+%5Bcircle%5D.png?format=500w">  Profile  <a style="font-size:12px" type="button" id="editlink" href="#">edit user profile</a></h4>
+    <div id="accountInfo" class="show" style="height:200px">
 		{% for user in user_info %}
-		<h5 class="list-group-item-heading">username: {{user.username}}</h5>
-		<h5 class="list-group-item-heading">fullname: {{user.fullname}}</h5>
-		<h5 class="list-group-item-heading">phone number: {{user.phone}}</h5>
-		<h5 class="list-group-item-heading">card number: {{user.card}}</h5>
-		<h5 class="list-group-item-heading">address: {{user.address}}</h5>
+		<div class="row">
+			<div class="col-lg-2"><h6 class="text-muted">username</h6></div>
+			<div class="col-lg-10"><h6>{{user.username}}</h6></div>
+		</div>
+		<div class="row">
+			<div class="col-lg-2"><h6 class="text-muted">fullname</h6></div>
+			<div class="col-lg-10"><h6>{{user.fullname}}</h6></div>
+		</div>
+		<div class="row">
+			<div class="col-lg-2"><h6 class="text-muted">phone number</h6></div>
+			<div class="col-lg-10"><h6>{{user.phone}}</h6></div>
+		</div>
+		<div class="row">
+			<div class="col-lg-2"><h6 class="text-muted">card number</h6></div>
+			<div class="col-lg-10"><h6>{{user.card}}</h6></div>
+		</div>
+		<div class="row">
+			<div class="col-lg-2"><h6 class="text-muted">address</h6></div>
+			<div class="col-lg-10"><h6>{{user.address}}</h6></div>
+		</div>
 		{% endfor %}
-	{% else %}
-		<form id="user_form" method="post" action="/bookstore/account/"
-		        enctype="multipart/form-data">
+	</div>
+	<div id="editAccountInfo" class="hidden" style="height:200px">	
+		<form id="user_form" method="post" action="/bookstore/account/" enctype="multipart/form-data">
 		    {% csrf_token %}
 		    {% for field in user_form %}
-   				<h6 style="color:red">{{field.errors}}</h6>
    				<div class="input-group">
    				<label for="{{ field.id_for_label }}" class="sr-only">{{ field.label_tag }}</label>
-   				<span class="input-group-addon glyphicon glyphicon-pencil" aria-hidden="true"></span>
+   				<span class="input-group-addon glyphicon glyphicon-edit" aria-hidden="true"></span>
    				{{field}}
 				</div>
    			{% endfor %}<br>
 		    <input class="btn btn-success" type="submit" name="submit" value="Save" />
 		</form>
-	{% endif %}
 	</div>
-</div>
+<hr>
 
-	<h2>My feedback</h2>
-    
-	{% for feedback in feedback_list %}
-	<h5 class="list-group-item-heading">book:{{feedback.title}}</h4>
-	<h5 class="list-group-item-heading">score:{{feedback.score}}</h5>
-	<h5 class="list-group-item-heading">text:{{feedback.text}}</h5>
-	<h5 class="list-group-item-heading">text:{{feedback.date}}</h5>
-	{% endfor %}
+<h4><span class="glyphicon glyphicon-th-list" aria-hidden="true"></span> Feedbacks <a style="font-size:12px">hide</a></h4>
 
-	<h2>My rating</h2>
+    <div style="max-height:200px">
+    	{%if feedback_list|length > 0%}
+	    	{% for feedback in feedback_list %}
+				<h5 class="list-group-item-heading">book:{{feedback.title}}</h4>
+				<h5 class="list-group-item-heading">score:{{feedback.score}}</h5>
+				<h5 class="list-group-item-heading">text:{{feedback.text}}</h5>
+				<h5 class="list-group-item-heading">text:{{feedback.date}}</h5>
+			{% endfor %}
+    	{%else%}
+    		<h5>You haven't written a feedback.</h5>
+    	{%endif%}
+    </div>
+	
+<hr>
+<h4>Ratings</h4>
 
 	{% for rating in rate_list %}
 	<h5 class="list-group-item-heading">user:{{rating.customer_id}}</h4>
@@ -82,6 +91,10 @@
 	<h5 class="list-group-item-heading">text:{{rating.text}}</h5>
 	<h5 class="list-group-item-heading">rating:{{rating.rate}}</h5>
 	{% endfor %}
+
+</div>
+<hr>
+
 {% endif %}
 
 
@@ -93,8 +106,8 @@ $("#count").bind("change", function() {
 
 $('#editlink').on('click', function () {
 	var text = $('#editlink').text();
-	$(this).text(text == 'return to account info' ? 'edit account info' : 'return to account info');
-	if (text == 'return to account info'){
+	$(this).text(text == 'return to user profile' ? 'edit user profile' : 'return to user profile');
+	if (text == 'return to user profile'){
 		$("#accountInfo").removeClass('hidden');
 	}
 	else{

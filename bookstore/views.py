@@ -65,7 +65,7 @@ def detail(request,isbn,count=0):
     book = [dict(zip(columns, row)) for row in cur.fetchall()]
     count = int(count)
     if count==0:
-        cur.execute("SELECT * FROM bookstore_feedback WHERE book_id='%s';"%(isbn))
+        cur.execute("SELECT * FROM bookstore_feedback WHERE book_id='%s' ORDER BY DATE ;"%(isbn))
         columns = [col[0] for col in cur.description]
         feedback_list = [dict(zip(columns, row)) for row in cur.fetchall()]
     else:
