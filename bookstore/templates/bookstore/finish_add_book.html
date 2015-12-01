@@ -1,0 +1,21 @@
+{% extends base_template %}
+
+{% block title %}Books{% endblock %}
+
+{% block content %}
+
+
+{% if completed %}
+	<h2>Add Successful</h2>
+	<h5> You have added {{copies}} copies to {{title}}.
+
+	<p></p>
+	<a href="/bookstore">Return to home page</a>
+	<p></p>
+	<a href="/bookstore/detail/{{ISBN}}">Check the book detail</a>
+
+{% else %}
+	<p> Your request is invalid. </p>
+	<a href="/bookstore">Return to home page</a>
+{% endif %}
+{% endblock %}

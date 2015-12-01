@@ -30,7 +30,12 @@
         <label for="rating1">1</label>
       </span>
     </p>
-  <button class="btn btn-s btn-warning pull-right" data-toggle="modal" data-target="#OrderModal" data-booktitle="{{book.title}}" data-bookisbn="{{book.ISBN}}" data-bookcopies="{{book.copies}}"> Order </button>
+
+    {% if isManager %}
+    <button class="btn btn-s btn-warning pull-right" data-toggle="modal" data-target="#AddModal" data-booktitle="{{book.title}}" data-bookisbn="{{book.ISBN}}" data-bookcopies="{{book.copies}}"> Add </button>
+    {% else %}
+    <button class="btn btn-s btn-warning pull-right" data-toggle="modal" data-target="#OrderModal" data-booktitle="{{book.title}}" data-bookisbn="{{book.ISBN}}" data-bookcopies="{{book.copies}}"> Order </button>
+    {% endif %}
 
   <p class="list-group-item-text">ISBN: {{book.ISBN}}</p>
   <p class="list-group-item-text">Published by {{book.publisher}} in {{book.year_of_publication}}</p>
@@ -129,6 +134,28 @@
   </div>
 </div>
 
+<div class="modal fade" id="AddModal" tabindex="-1" role="dialog" aria-labelledby="AddModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="AddModalLabel"></h4>
+      </div>
+      <form action="/bookstore/add/" method="POST" id="OrderForm"> {% csrf_token %}
+        <div class="modal-body">
+          <input id="add_copies" name="add_copies" value=""/>
+          <p id="modalavail"></p>
+        </div>
+      <div class="modal-footer">
+          <input type="hidden" id="add_isbn" name="add_isbn"/>
+          <input type="hidden" id="add_title" name="add_title"/>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary" name="order">Confirm</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
 <script type="text/javascript">
 
 $('#OrderModal').on('show.bs.modal', function (event) {
@@ -141,6 +168,18 @@ $('#OrderModal').on('show.bs.modal', function (event) {
   modal.find('#modalavail').text('Available copies: '+ book_copies)
   document.getElementById("order_isbn").value=book_isbn
   document.getElementById("order_title").value=book_title
+});
+
+$('#AddModal').on('show.bs.modal', function (event) {
+  var button = $(event.relatedTarget) 
+  var book_title = button.data('booktitle') 
+  var book_isbn = button.data('bookisbn') 
+  var book_copies = button.data('bookcopies') 
+  var modal = $(this)
+  modal.find('#AddModalLabel').text('Add copies for '+ book_title+ ' ?')
+  modal.find('#modalavail').text('Available copies: '+ book_copies)
+  document.getElementById("add_isbn").value=book_isbn
+  document.getElementById("add_title").value=book_title
 });
 
 </script>

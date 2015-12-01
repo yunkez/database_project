@@ -58,6 +58,7 @@ def searchValue(s):
 @login_required(login_url='/login')
 def detail(request,isbn):
     cur = connection.cursor()
+    isManager = request.user.is_superuser
     try:
         # sql = "SELECT f1.* FROM bookstore_feedback f1 JOIN (SELECT r1.customer_id, r1.book_id, AVG(r1.rate) \
         #     AS average FROM bookstore_rating r1 GROUP BY r1.book_id, r1.customer_id HAVING book_id = '%s') AS temp \
@@ -71,7 +72,8 @@ def detail(request,isbn):
     except:
         book = ""
         feedback_list = "" 
-    return render(request, 'bookstore/index_detail.html',{'feedback_list':feedback_list,'book': book[0],'base_template':'base_auth.html'})
+    return render(request, 'bookstore/index_detail.html',{'feedback_list':feedback_list,'book': book[0],
+        'isManager':isManager,'base_template':'base_auth.html'})
 
 @login_required(login_url='/login')
 def feedback(request):
@@ -174,10 +176,8 @@ def order(request):
             group by book_id order by num desc) T) "%(ISBN,username,ISBN)
         cur.execute(sql)
         columns = [col[0] for col in cur.description]
-        book_list = [dict(zip(columns, row)) for row in cur.fetchall()]
-        return render(request,'bookstore/finish.html',{'completed':completed,'book_list':book_list,'base_template':'base_auth.html'})
-    else:
-        return render(request,'bookstore/finish.html',{'completed':completed,'book_list':book_list,'base_template':'base_auth.html'})
+        book_list = [dict(zip(columns, row)) for row in cur.fetchall()]       
+    return render(request,'bookstore/finish.html',{'completed':completed,'book_list':book_list,'base_template':'base_auth.html'})
 
 @login_required(login_url='/login')
 def orderRecords(request):
@@ -275,23 +275,24 @@ def manager_account(request,count):
     return render_to_response('bookstore/account_info.html',{'count':count,'pop_book':pop_book, 'pop_publisher':pop_publisher,'pop_author':pop_author,
         'base_template':'base_auth.html','isManager':isManager},context)
 
-
-
 @login_required(login_url='/login')
 def add(request):
     context = RequestContext(request)
     cur = connection.cursor()
-    book_list = ""
+    completed = False
     if request.method == 'POST':
         ISBN = request.POST['add_isbn']
-        copies = int(request.POST['add_copies'])  
+        copies = int(request.POST['add_copies']) 
+        title = request.POST['add_title']
         try:
             cur.execute("SELECT copies FROM bookstore_book WHERE ISBN = '%s'"%(ISBN))
             avail = int(cur.fetchone()[0])  
             cur.execute("UPDATE bookstore_book SET copies='%d' WHERE ISBN='%s'"%(avail+copies,ISBN))
+            completed = True
         except Book.DoesNotExist:
             info = "Please enter a valid ISBN."
-    return HttpResponseRedirect("/bookstore")
+    return render(request,'bookstore/finish_add_book.html',{'completed':completed,'title':title,'copies':copies,
+        'ISBN':ISBN,'base_template':'base_auth.html'})
 
 @login_required(login_url='/login')
 def addNewBook(request):
