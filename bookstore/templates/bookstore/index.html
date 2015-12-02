@@ -47,37 +47,30 @@
 <div class="row">
   <div class="col-lg-2"><img class="img-thumbnail" src="http://ecx.images-amazon.com/images/I/51AcjY2mWgL._SX358_BO1,204,203,200_.jpg"/>
   </div>
-  <div class="col-lg-10">
+  <div class="col-lg-8">
     <a href="/bookstore/detail/{{book.ISBN}}"><h4 class="list-group-item-heading">{{book.title}}</h4></a>
   <h5 class="list-group-item-heading">By {{book.author}}</h5>
-  <h5 class="list-group-item-heading">Score {{book.average}}</h5>
+  <h5 class="list-group-item-heading">Average Score: {{book.average}} </h5>
 
-<p class="starp">
-      Average Score:
-      <span class="starRating">
-        <input id="rating5" type="radio" name="rating" value="5">
-        <label for="rating5">5</label>
-        <input id="rating4" type="radio" name="rating" value="4">
-        <label for="rating4">4</label>
-        <input id="rating3" type="radio" name="rating" value="3" checked>
-        <label for="rating3">3</label>
-        <input id="rating2" type="radio" name="rating" value="2">
-        <label for="rating2">2</label>
-        <input id="rating1" type="radio" name="rating" value="1">
-        <label for="rating1">1</label>
-      </span>
-    </p>
-    {% if isManager %}
-    <button class="btn btn-s btn-warning pull-right" data-toggle="modal" data-target="#AddModal" data-booktitle="{{book.title}}" data-bookisbn="{{book.ISBN}}" data-bookcopies="{{book.copies}}"> Add </button>
-    {% else %}
-    <button class="btn btn-s btn-warning pull-right" data-toggle="modal" data-target="#OrderModal" data-booktitle="{{book.title}}" data-bookisbn="{{book.ISBN}}" data-bookcopies="{{book.copies}}"> Order </button>
-    {% endif %}
-
+<p class="star-ratings-sprite"><span style="width:{% widthratio book.average 1 10 %}%" class="rating"></span></p>
+    
 
   <p class="list-group-item-text">Published by {{book.publisher}} in {{book.year_of_publication}}</p>
-  <p class="list-group-item-text">Price: {{book.price}}</p>
+  <p class="list-group-item-text">Keywords: {{book.keywords}}</p>
   <p class="list-group-item-text">Subject: {{book.subject}}</p>
 
+  </div>
+
+  <div class="col-lg-2 text-center">
+    <h1 style="font-size:60px" class="text-success">${{book.price}}</h1>
+    <h5 class="text-muted">{{book.copies}} copies avaliable</h5>
+
+    <br><br>
+{% if isManager %}
+    <button class="btn btn-s btn-warning" data-toggle="modal" data-target="#AddModal" data-booktitle="{{book.title}}" data-bookisbn="{{book.ISBN}}" data-bookcopies="{{book.copies}}"> Add </button>
+    {% else %}
+    <button class="btn btn-s btn-warning" data-toggle="modal" data-target="#OrderModal" data-booktitle="{{book.title}}" data-bookisbn="{{book.ISBN}}" data-bookcopies="{{book.copies}}"> Order </button>
+    {% endif %}
   </div>
 </div>
 </div>

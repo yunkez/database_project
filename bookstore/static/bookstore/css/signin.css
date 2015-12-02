@@ -39,44 +39,21 @@ body {
   border-top-right-radius: 0;
 }
 
-.starp{
-  margin  : 0 0 1.5em;
-  padding : 0;
-}
-.starRating:not(old){
-  display        : inline-block;
-  width          : 7.5em;
-  height         : 1.5em;
-  overflow       : hidden;
-  vertical-align : bottom;
+.star-ratings-sprite {
+  background: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/2605/star-rating-sprite.png") repeat-x;
+  font-size: 0;
+  height: 21px;
+  line-height: 0;
+  overflow: hidden;
+  text-indent: -999em;
+  width: 110px;
 }
 
-.starRating:not(old) > input{
-  margin-right : -100%;
-  opacity      : 0;
-}
+  .rating {
+    background: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/2605/star-rating-sprite.png") repeat-x;
+    background-position: 0 100%;
+    float: left;
+    height: 21px;
+    display:block;
+  } 
 
-.starRating:not(old) > label{
-  display         : block;
-  float           : right;
-  position        : relative;
-  background      : url('star-off.svg');
-  background-size : contain;
-}
-
-.starRating:not(old) > label:before{
-  content         : '';
-  display         : block;
-  width           : 1.5em;
-  height          : 1.5em;
-  background      : url('star-on.svg');
-  background-size : contain;
-  opacity         : 0;
-  transition      : opacity 0.2s linear;
-}
-
-.starRating:not(old) > label:hover:before,
-.starRating:not(old) > label:hover ~ label:before,
-.starRating:not(:hover) > :checked ~ label:before{
-  opacity : 1;
-}
