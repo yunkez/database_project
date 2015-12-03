@@ -10,6 +10,7 @@ from .forms import CustomerCreationForm,CustomerChangeForm,BookCreationForm
 from django.db import connection
 import datetime
 import ast
+from django.core.urlresolvers import reverse
 
 @login_required(login_url='/login')
 def index(request):
@@ -57,7 +58,7 @@ def searchValue(s):
     return "%"+s+"%"
 
 @login_required(login_url='/login')
-def detail(request,isbn,count=0):
+def detail(request,isbn,count=0,err=0):
     cur = connection.cursor()
     isManager = request.user.is_superuser
 
@@ -78,7 +79,7 @@ def detail(request,isbn,count=0):
         columns = [col[0] for col in cur.description]
         feedback_list = [dict(zip(columns, row)) for row in cur.fetchall()][:count]
     return render(request, 'bookstore/index_detail.html',{'feedback_list':feedback_list,'book': book[0],
-        'isManager':isManager,'base_template':'base_auth.html'})
+        'isManager':isManager,'base_template':'base_auth.html','error':err})
 
 @login_required(login_url='/login')
 def feedback(request):
@@ -328,6 +329,7 @@ def addNewBook(request):
     return render_to_response('bookstore/add_book.html',{'book_form': book_form,'created':created,'base_template':'base_auth.html'},context)
 
 
+
 @login_required(login_url='/login')
 def vote(request,isbn):
     cur = connection.cursor()
@@ -339,11 +341,14 @@ def vote(request,isbn):
             try:
                 sql = "INSERT INTO bookstore_rating VALUES ('%s','%s','%s','%s')"%(username, rater, isbn, score)
                 cur.execute(sql)
-                return HttpResponseRedirect("/bookstore/detail/%s"%isbn)
+                # return redirect("/bookstore/detail/%s"%isbn)
+                return redirect(reverse("detail",args=[isbn,0,3]))
             except:
-                return HttpResponse("You cannot vote twice!")
+                return redirect(reverse("detail",args=[isbn,0,2]))
         else:
-            return HttpResponse("You cannot vote for yourself!")
+            return redirect(reverse("detail",args=[isbn,0,1]))
+
+
     
 
 

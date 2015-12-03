@@ -6,6 +6,7 @@ urlpatterns = [
     url(r'^$', views.index, name='index'),
     url(r'^detail/([0-9]{13})/$', views.detail, name='detail'),
     url(r'^detail/([0-9]{13})/([0-9])$', views.detail, name='detail'),
+    url(r'^detail/([0-9]{13})/([0-9])/([0-3]{1})$', views.detail, name='detail'),
     url(r'^vote/([0-9]{13})/$', views.vote, name='vote'),
     url(r'^logout/$', views.logoutView, name='logout'),
     url(r'^order/$', views.order, name='order'),
@@ -16,6 +17,7 @@ urlpatterns = [
     url(r'^account/$', views.account, name='account'),
     url(r'^account/([0-9])/$', views.account, name='account'),
     # url(r'^success/$', views.finish, name='finish')
+    
 
 
 ]

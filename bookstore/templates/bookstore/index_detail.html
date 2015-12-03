@@ -4,9 +4,26 @@
 
 {% block content %}
 
-
 <h1>{{book.title}}  <a style="font-size:15px" href="/bookstore">Back to Book List</a></h1>
-
+{%if error == '1'%}
+<div class="alert alert-danger" id="alert_box" role="alert">
+<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+  <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+  <strong>Sorry</strong> You cannot vote yourself 
+</div>
+{%elif error == '2'%}
+<div class="alert alert-danger" id="alert_box" role="alert">
+<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+  <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+  <strong>Sorry</strong> You cannot vote twice
+</div>
+{%elif error == '3'%}
+<div class="alert alert-success" id="alert_box" role="alert">
+<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+  <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+  <strong>Success</strong> Vote recorded
+</div>
+{%endif%}
 <div class="list-group-item bs-callout-warning">
 <div class="row">
   <div class="col-lg-2">
@@ -65,7 +82,7 @@
 
   </div>
   <div class="col-lg-7">
-    <p>{{feedback.text}}</p>
+    <p>{{feedback.text}}</p> 
   </div>
   <div class="col-lg-2">
 <form action="/bookstore/vote/{{book.ISBN}}/" method="POST" id="voteForm"> {% csrf_token %}
@@ -91,14 +108,28 @@
 <div>
  <form action="/bookstore/feedback/" method="POST" id="FeedbackForm"> {% csrf_token %}
  <h5><span class="glyphicon glyphicon-star"></span> My Feedback</h5>
- <input id="feedback_score" type="number" class="rating" min="0" max="10" step="2" data-size="xs" data-rtl="false"/>
-   Score 0-10 <input id="feedback_score" name="feedback_score" value=""></input>
+ Score (1-10):
+<div class="acidjs-rating-stars">
+<input type="radio" name="feedbackscore" id="feedback-score-0" value="10" title="1" data-toggle="tooltip"/><label for="feedback-score-0"></label><!--
+--><input type="radio" name="feedbackscore" id="feedback-score-1" value="9" title="1" data-toggle="tooltip" /><label for="feedback-score-1"></label><!--
+--><input type="radio" name="feedbackscore" id="feedback-score-2" value="8" title="1" data-toggle="tooltip" /><label for="feedback-score-2"></label><!--
+--><input type="radio" name="feedbackscore" id="feedback-score-3" value="7" title="1" data-toggle="tooltip" /><label for="feedback-score-3"></label><!--
+--><input type="radio" name="feedbackscore" id="feedback-score-4"  value="6" title="1" data-toggle="tooltip" /><label for="feedback-score-4"></label><!--
+--><input type="radio" name="feedbackscore" id="feedback-score-5"  value="5" title="1" data-toggle="tooltip" /><label for="feedback-score-5"></label><!--
+--><input type="radio" name="feedbackscore" id="feedback-score-6"  value="4" title="1" data-toggle="tooltip" /><label for="feedback-score-6"></label><!--
+--><input type="radio" name="feedbackscore" id="feedback-score-7"  value="3" title="1" data-toggle="tooltip" /><label for="feedback-score-7"></label><!--
+--><input type="radio" name="feedbackscore" id="feedback-score-8"  value="2" title="1" data-toggle="tooltip" /><label for="feedback-score-8"></label><!--
+--><input type="radio" name="feedbackscore" id="feedback-score-9"  value="1" title="1" data-toggle="tooltip" /><label for="feedback-score-9"></label>
+</div>
+   <input class="hidden" id="feedback_score" name="feedback_score" value="0"></input>
     <textarea class="form-control" id="feedback_text" name="feedback_text" value="" placeholder="write down your feedback for this book."></textarea> 
     <input type="hidden" id="feedback_isbn" name="feedback_isbn" value="{{book.ISBN}}"></input>
     <button type="submit" class="btn btn-primary btn-success pull-right" name="order">Submit</button>
 
 </form> 
 </div>
+
+
 
 <div class="modal fade" id="OrderModal" tabindex="-1" role="dialog" aria-labelledby="OrderModalLabel">
   <div class="modal-dialog" role="document">
@@ -156,13 +187,15 @@
   </div>
 </div>
 
+
+
 <script type="text/javascript">
-$("#feedback_score").rating({min:1, max:10, step:1, size:'xs'});
+$('input[name=feedbackscore]').click(function() {
+    score = $('input[name=feedbackscore]:checked').val();
+    $('#feedback_score').val(score);
+});
 
-starCaptions: function(val) {
-    return val+'';
-}
-
+$('input[type=radio][name=feedbackscore]').tooltip({placement:"top", trigger: "hover"});
 
 $('#OrderModal').on('show.bs.modal', function (event) {
   var button = $(event.relatedTarget) 
