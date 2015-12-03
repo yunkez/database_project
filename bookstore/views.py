@@ -35,18 +35,12 @@ def index(request):
         publisher = request.POST['search_publisher'] 
         title = request.POST['search_title'] 
         subject = request.POST['search_subject']
-        orderby = int(request.POST['orderby'])
+        orderby = request.POST['orderby']
         page_title = "Your Search Results "
-        if orderby==1:
-            sql = "SELECT * from bookstore_book where title LIKE '%s' and author LIKE '%s' and publisher \
-            LIKE '%s' and subject LIKE '%s' order by year_of_publication;" %\
-            (searchValue(title),searchValue(author),searchValue(publisher),searchValue(subject))
-    
-        else:
-            sql ="SELECT b1.*,AVG(score) AS average from bookstore_book b1 join bookstore_feedback where b1.title LIKE '%s' \
-            and b1.author LIKE '%s' and b1.publisher LIKE'%s' and b1.subject LIKE '%s' \
-            group by b1.ISBN order by AVG(score);"%\
-            (searchValue(title),searchValue(author),searchValue(publisher),searchValue(subject))
+        sql ="SELECT b.*,average from (SELECT * FROM bookstore_book where title LIKE '%s' and \
+        author LIKE '%s' and publisher LIKE'%s' and subject LIKE '%s') b, (SELECT book_id, AVG(score) AS average\
+        FROM bookstore_feedback GROUP BY book_id) T WHERE b.ISBN=T.book_id order by %s DESC"%\
+        (searchValue(title),searchValue(author),searchValue(publisher),searchValue(subject),orderby)
         cur.execute(sql)
         columns = [col[0] for col in cur.description]
         book_list = [dict(zip(columns, row)) for row in cur.fetchall()]

@@ -31,8 +31,8 @@
 
   <div class="row">
   <div class="col-lg-1"><h6>Order By</h6></div>
-  <div class="col-lg-1"><div class="radio"><label><input type="radio" name="optradio" id="order_1"/>Year</label></div></div>
-  <div class="col-lg-2"><div class="radio"><label><input type="radio" name="optradio" id="order_2"/>Average score</label></div></div>
+  <div class="col-lg-2"><div class="radio"><label><input type="radio" name="optradio" id="order_score"/>Average score</label></div></div>
+  <div class="col-lg-1"><div class="radio"><label><input type="radio" name="optradio" id="order_year"/>Year</label></div></div>
   <div class="col-lg-7"><input type="hidden" name="orderby" id="orderby" value="{{orderby}}"/></div>
   </div>
 
@@ -163,19 +163,19 @@ $('#AddModal').on('show.bs.modal', function (event) {
 });
 
 $( document ).ready(function() {
-   if (document.getElementById('orderby').value==1) {
-      document.getElementById("order_1").checked = true;
+   if (document.getElementById('orderby').value=="year_of_publication") {
+      document.getElementById("order_year").checked = true;
     } else {
-      document.getElementById("order_2").checked = true;
+      document.getElementById("order_score").checked = true;
     }  
 });
 
 
 function SetValue() {
-    if (document.getElementById('order_1').checked) {
-    document.getElementById("orderby").value = 1;
+    if (document.getElementById('order_year').checked) {
+    document.getElementById("orderby").value = "year_of_publication";
   } else {
-    document.getElementById("orderby").value = 0;
+    document.getElementById("orderby").value = "average";
   }     
 }
 
