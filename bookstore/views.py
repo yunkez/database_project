@@ -74,6 +74,7 @@ def detail(request,isbn,count=0,err=0):
     select r.rater_id,r.book_id,avg(r.rate) as priority from bookstore_rating r group by r.book_id,r.rater_id having r.book_id='%s') as rank\
     where r2.book_id='%s' and rank.rater_id=r2.rater_id group by r2.rate,r2.rater_id,rank.priority) as temp \
     where temp.rater_id = bf.customer_id order by temp.priority desc,rater_id;"%(isbn,isbn)
+    sql2 = "SELECT bf.* from bookstore_feedback bf where bf.customer_id not in (select rater_id from bookstore_rating where book_id='%s') and bf.book_id='%s';"%(isbn,isbn)
     cur.execute(sql)
     # columns = [col[0] for col in cur.description]
     name=''
@@ -88,11 +89,11 @@ def detail(request,isbn,count=0,err=0):
             feedback_list[i][str(tmp[5])] = tmp[6]
         else:
             feedback_list[i][str(tmp[5])] = tmp[6]
-    # cur.execute(sql2)
+    cur.execute(sql2)
     while (True and (i<count-1 or count==0)):
         tmp = cur.fetchone()
         if tmp == None: break
-        feedback_list.append({'customer_id':tmp[1],'book_id':tmp[0],'text':tmp[2],'score':tmp[3],'date':tmp[4],'rate0':0L,'rate1':0L,'rate2':0L})
+        feedback_list.append({'customer_id':tmp[1],'book_id':tmp[0],'text':tmp[2],'score':tmp[3],'date':tmp[4],'0':0L,'1':0L,'2':0L})
         i+=1
     # if count==0:
     #     cur.execute("SELECT * FROM bookstore_feedback WHERE book_id='%s' ORDER BY DATE ;"%(isbn))
