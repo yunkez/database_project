@@ -16,12 +16,19 @@
 <nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container">
         <div class="navbar-header">
-          <a href="/bookstore"><img width="230px" src="{% static 'bookstore/img/sidebar.png' %}"></a>
+          <a class="navbar-brand" href="/bookstore">
+            <span class="glyphicon glyphicon-home" aria-hidden="true"></span>  B&N Online Bookstore</a>
+          <!-- <a href="/bookstore"><img width="230px" src="{% static 'bookstore/img/sidebar.png' %}"></a> -->
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav pull-right">
+            {% if not isManager %}
             <li><a href="/bookstore/account">Welcome, {{user.fullname}}</a></li>
             <li><a href="/bookstore/myorderrecords">My Order Records</a></li>
+            {% else %}
+            <li><a href="/bookstore/account">Monthly Statistics</a></li>
+            {% endif %}
+
             <li><a href="/bookstore/logout">Logout</a></li>
           </ul>
         </div>

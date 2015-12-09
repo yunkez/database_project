@@ -13,8 +13,8 @@
   <div class="col-lg-8">
     <h4 class="list-group-item-heading">{{book.title}}</h4>
   <h5 class="list-group-item-heading">By {{book.author}}</h5>
-  <h5 class="list-group-item-heading">Average Score: {{book.average|floatformat:-1}} </h5>
-  <p class="star-ratings-sprite"><span style="width:{% widthratio book.average 1 10 %}%" class="rating"></span></p>
+  <h5 class="list-group-item-heading">Average Score: {{average|floatformat:-1}} </h5>
+  <p class="star-ratings-sprite"><span style="width:{% widthratio average 1 10 %}%" class="rating"></span></p>
 
   <p class="list-group-item-text">ISBN: {{book.ISBN}}</p>
   <p class="list-group-item-text">Published by {{book.publisher}} in {{book.year_of_publication}}</p>

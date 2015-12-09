@@ -7,13 +7,24 @@
 <div class="text-center">
 <br><br>
 {% if completed %}
-<h2>Order Successful</h2>
-<a href="/bookstore">Return to home page</a>
-<h5>You may also like</h5>
+<h1 class="text-success">Order Successful</h1>
+<a href="/bookstore">Return to home page</a><br>
+<a href="/bookstore/detail/{{ISBN}}">Return to book detail</a>
+
+{% if book_list|length > 0%}
+<h3>You may also like</h3>
+<div class="row">
+<div class="col-lg-3"></div>
 {% for book in book_list %}
-<p class="list-group-item-heading">{{book.title}}</p>
-<p class="list-group-item-heading">By {{book.author}}</p>
+<div class="list-group-item text-center col-lg-2" style="height:300px">
+	<img class="img-thumbnail" src="http://ecx.images-amazon.com/images/I/51AcjY2mWgL._SX358_BO1,204,203,200_.jpg"/>
+	<a class="list-group-item-heading" href="/bookstore/detail/{{book.ISBN}}">{{book.title}}</a>
+	<h5 class="list-group-item-heading">By {{book.author}}</h5>
+</div>
 {% endfor %}
+<div class="col-lg-3"></div>
+</div>
+{% endif %}
 {% else %}
 <p> Your request is invalid. </p>
 <a href="/bookstore">Return to home page</a>

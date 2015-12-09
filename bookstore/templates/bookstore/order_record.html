@@ -4,6 +4,7 @@
 
 {% block content %}
 <h2>My Order Records</h2>
+    {%if order_list|length > 0%}
 	<table id="orderRecord" class="table table-striped">
 	<tr>
         <th>order id</th>
@@ -22,6 +23,8 @@
 	      <td>{{order.order_status}}</td>
 	      <td>{{order.copies}}</td>
 	</tr>
-
 	{% endfor %}
+	{%else%}
+	<h5>You have no order records.</h5>
+	{%endif%}
 {% endblock %}

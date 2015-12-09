@@ -58,10 +58,15 @@ def detail(request,isbn,count=0,err=0):
     cur = connection.cursor()
     isManager = request.user.is_superuser
 
-    cur.execute("SELECT b.*,T.average from bookstore_book b,(SELECT book_id, AVG(score) AS average \
-        FROM bookstore_feedback where book_id='%s') T WHERE b.ISBN=T.book_id;"%(isbn))
+    cur.execute("SELECT * from bookstore_book b WHERE b.ISBN='%s';"%(isbn))
     columns = [col[0] for col in cur.description]
     book = [dict(zip(columns, row)) for row in cur.fetchall()]
+    
+    cur.execute("SELECT AVG(score) FROM bookstore_feedback where book_id='%s';"%(isbn))
+    average = cur.fetchone()[0]
+    if average < 0:
+        average = 0
+
     count = int(count)
     if count==0:
         cur.execute("SELECT * FROM bookstore_feedback WHERE book_id='%s' ORDER BY DATE ;"%(isbn))
@@ -74,8 +79,8 @@ def detail(request,isbn,count=0,err=0):
         cur.execute(sql)
         columns = [col[0] for col in cur.description]
         feedback_list = [dict(zip(columns, row)) for row in cur.fetchall()][:count]
-    return render(request, 'bookstore/index_detail.html',{'feedback_list':feedback_list,'book': book[0],
-        'isManager':isManager,'base_template':'base_auth.html','error':err})
+    return render(request, 'bookstore/index_detail.html',{'book': book[0],'feedback_list':feedback_list,
+        'isManager':isManager,'average':average,'base_template':'base_auth.html','error':err})
 
 @login_required(login_url='/login')
 def feedback(request):
@@ -175,15 +180,15 @@ def order(request):
             info = "Please enter a valid ISBN."
     if completed:
         username = request.user.username
-        sql = "SELECT title,author from bookstore_book where ISBN in (SELECT book_id FROM \
+        sql = "SELECT title,author,ISBN from bookstore_book where ISBN in (SELECT book_id FROM \
             (SELECT book_id, count(*) as num from bookstore_order where customer_id in \
             (SELECT customer_id from bookstore_order where book_id = '%s' and customer_id != '%s')\
             and book_id != '%s'\
             group by book_id order by num desc) T) "%(ISBN,username,ISBN)
         cur.execute(sql)
         columns = [col[0] for col in cur.description]
-        book_list = [dict(zip(columns, row)) for row in cur.fetchall()]       
-    return render(request,'bookstore/finish.html',{'completed':completed,'book_list':book_list,'base_template':'base_auth.html'})
+        book_list = [dict(zip(columns, row)) for row in cur.fetchall()][:3]       
+    return render(request,'bookstore/finish.html',{'completed':completed,'book_list':book_list,'ISBN':ISBN,'base_template':'base_auth.html'})
 
 @login_required(login_url='/login')
 def orderRecords(request):
@@ -218,7 +223,7 @@ def customer_account(request):
             FROM bookstore_customer WHERE username='%s'"%(username))
         columns = [col[0] for col in cur.description]
         user_info = [dict(zip(columns, row)) for row in cur.fetchall()]
-        cur.execute("SELECT title, text,score,date FROM bookstore_feedback,bookstore_book\
+        cur.execute("SELECT title,text,score,date FROM bookstore_feedback,bookstore_book\
             WHERE customer_id='%s' AND bookstore_feedback.book_id=bookstore_book.ISBN"%(username))
         columns = [col[0] for col in cur.description]
         feedback_list = [dict(zip(columns, row)) for row in cur.fetchall()]
@@ -261,7 +266,7 @@ def manager_account(request,count):
     try:
         now=datetime.datetime.now()
         date="%"+ "%s/%s" % (now.month, now.year) 
-        sql = "SELECT ISBN,title FROM bookstore_book WHERE ISBN IN (SELECT book_id FROM (SELECT book_id, count(*) AS num \
+        sql = "SELECT ISBN,title,author FROM bookstore_book WHERE ISBN IN (SELECT book_id FROM (SELECT book_id, count(*) AS num \
             FROM bookstore_order WHERE order_date LIKE '%s'  GROUP BY book_id ORDER BY num DESC) T);"%(date)       
         cur.execute(sql)
         columns = [col[0] for col in cur.description]

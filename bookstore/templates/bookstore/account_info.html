@@ -9,77 +9,52 @@
 
 	<h2>Bookstore Statistics</h2> 
 	<br>
-	<div class="list-group">	
-	<div class="list-group-item">
-	<div class="row">
-		<div class="col-lg-2"><h5 class="list-group-item-text">Popular Books Top</h5></div>
-		<div class="col-lg-2"><div class="input-group">
-      <input id="count" name="count" value="{{count}}" type="number" class="form-control"/>
-      <a class="input-group-addon glyphicon glyphicon-search" href = "/bookstore/3/" id="search"></a>
-    </div></div>
-		<div class="col-lg-8"></div>
-	</div>
-	</div>
-    {%if pop_book|length > 0%}
-	    {% for book in pop_book %}
-	    <div class="list-group-item">
-		ISBN: {{book.ISBN}}
-		title: {{book.title}}
-		<p></p>
+	<div class="list-group-item row">
+		<div class="col-lg-1"><h5 class="list-group-item-text">TOP</h5></div>
+		<div class="col-lg-8">
+			<div class="input-group">
+				<input id="count" name="count" value="{{count}}" type="number" class="form-control"/>
+				<a class="input-group-addon glyphicon glyphicon-search" href = "/bookstore/3/" id="search"></a>
+    		</div>
 		</div>
-		{% endfor %}
-	{%else%}
-	<div class="list-group-item">
-		<h5 class="list-group-item-text">Empty</h5>
-		</div>
-	{%endif%}
 	</div>
-	<br>
-	<div class="list-group">	
-	<div class="list-group-item">
-	<div class="row">
-		<div class="col-lg-2"><h5 class="list-group-item-text">Popular Authors Top</h5></div>
-		<div class="col-lg-2"><div class="input-group">
-      <input id="count" name="count" value="{{count}}" type="number" class="form-control"/>
-      <a class="input-group-addon glyphicon glyphicon-search" href = "/bookstore/3/" id="search"></a>
-    </div></div>
-		<div class="col-lg-8"></div>
-	</div>
-	</div>
-    {%if pop_author|length > 0%}
-	    {% for author in pop_author %}
-			{{author.author}}
-			<p></p>
-			{% endfor %}
-	{%else%}
-		<div class="list-group-item">
-			<h5 class="list-group-item-text">Empty</h5>
-		</div>
-	{%endif%}
-	</div>
+	
 
-	<br>
-	<div class="list-group">	
-	<div class="list-group-item">
-	<div class="row">
-		<div class="col-lg-2"><h5 class="list-group-item-text">Popular Publishers Top</h5></div>
-		<div class="col-lg-2"><div class="input-group">
-      <input id="count" name="count" value="{{count}}" type="number" class="form-control"/>
-      <a class="input-group-addon glyphicon glyphicon-search" href = "/bookstore/3/" id="search"></a>
-    </div></div>
-		<div class="col-lg-8"></div>
-	</div>
-	</div>
-    {%if pop_publisher|length > 0%}
-	    {% for publisher in pop_publisher %}
-	{{publisher.publisher}}
-	<p></p>
-	{% endfor %}
-	{%else%}
-		<div class="list-group-item">
-			<h5 class="list-group-item-text">Empty</h5>
+	<div class="list-group row">	
+		<div class="list-group-item col-lg-4">
+			<h5 class="list-group-item-text"><span class="glyphicon glyphicon-book" aria-hidden="true"></span> Popular Books</h5>
+			{%if pop_book|length > 0%}
+			{% for book in pop_book %}
+				<hr>
+				<a class="list-group-item-heading" href="/bookstore/detail/{{book.ISBN}}/">{{book.title}} </a>	
+			{% endfor %}
+			{%else%}
+				<h5 class="list-group-item-text">Empty</h5>
+			{%endif%}
+			<hr>
 		</div>
-	{%endif%}
+		<div class="list-group-item col-lg-4">
+			<h5 class="list-group-item-text"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Popular Authors</h5>
+			{%if pop_author|length > 0%}
+		    {% for author in pop_author %}
+		    	<hr><p class="list-group-item-heading">{{author.author}} </p> 
+			{% endfor %}
+			{%else%}
+				<h5 class="list-group-item-text">Empty</h5>
+			{%endif%}
+			<hr>
+		</div>
+		<div class="list-group-item col-lg-4">
+			<h5 class="list-group-item-text"><span class="glyphicon glyphicon-home" aria-hidden="true"></span> Popular Publishers</h5>
+			{%if pop_publisher|length > 0%}
+		    {% for publisher in pop_publisher %}
+			    <hr><p class="list-group-item-heading">{{publisher.publisher}} </p> 
+			{% endfor %}
+			{%else%}
+				<h5 class="list-group-item-text">Empty</h5>
+			{%endif%}
+			<hr>
+		</div>
 	</div>
 {% else %}
 
@@ -136,15 +111,16 @@
 	    			<div class="row">
 	    				<div class="col-lg-2">
 	    					<h5 class="list-group-item-heading text-muted">Book</h5>
+	    					<h5 class="list-group-item-heading text-muted">Date</h5>
 							<h5 class="list-group-item-heading text-muted">Score</h5>
 							<h5 class="list-group-item-heading text-muted">Text</h5>
-							<h5 class="list-group-item-heading text-muted">Date</h5>
+
 	    				</div>
 	    				<div class="col-lg-10">
 	    					<h5 class="list-group-item-heading">{{feedback.title}}</h5>
+	    					<h5 class="list-group-item-heading">{{feedback.date}}</h5>
 							<h5 class="list-group-item-heading">{{feedback.score}}</h5>
 							<h5 class="list-group-item-heading">{{feedback.text}}</h5>
-							<h5 class="list-group-item-heading">{{feedback.date}}</h5>
 	    				</div>
 	    			</div>
 				</div>
@@ -165,16 +141,16 @@
 				 <div class="list-group-item">
 	    			<div class="row">
 	    				<div class="col-lg-2">
+	    					<h5 class="list-group-item-heading text-muted">Rating</h5>
 	    					<h5 class="list-group-item-heading text-muted">User</h5>
 							<h5 class="list-group-item-heading text-muted">Book</h5>
 							<h5 class="list-group-item-heading text-muted">Text</h5>
-							<h5 class="list-group-item-heading text-muted">Rating</h5>
 	    				</div>
 	    				<div class="col-lg-10">
+	    					<h5 class="list-group-item-heading">{{rating.rate}}</h5>
 	    					<h5 class="list-group-item-heading">{{rating.customer_id}}</h5>
 							<h5 class="list-group-item-heading">{{rating.title}}</h5>
 							<h5 class="list-group-item-heading">{{rating.text}}</h5>
-							<h5 class="list-group-item-heading">{{rating.rate}}</h5>
 	    				</div>
 	    			</div>
 				</div>
