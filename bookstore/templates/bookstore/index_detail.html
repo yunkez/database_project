@@ -5,25 +5,6 @@
 {% block content %}
 
 <h1>{{book.title}}  <a style="font-size:15px" href="/bookstore">Back to Book List</a></h1>
-{%if error == '1'%}
-<div class="alert alert-danger" id="alert_box" role="alert">
-<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-  <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-  <strong>Sorry</strong> You cannot vote yourself 
-</div>
-{%elif error == '2'%}
-<div class="alert alert-danger" id="alert_box" role="alert">
-<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-  <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-  <strong>Sorry</strong> You cannot vote twice
-</div>
-{%elif error == '3'%}
-<div class="alert alert-success" id="alert_box" role="alert">
-<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-  <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-  <strong>Success</strong> Vote recorded
-</div>
-{%endif%}
 <div class="list-group-item bs-callout-warning">
 <div class="row">
   <div class="col-lg-2">
@@ -32,7 +13,7 @@
   <div class="col-lg-8">
     <h4 class="list-group-item-heading">{{book.title}}</h4>
   <h5 class="list-group-item-heading">By {{book.author}}</h5>
-  <h5 class="list-group-item-heading">Average Score: {{book.average}} </h5>
+  <h5 class="list-group-item-heading">Average Score: {{book.average|floatformat:-1}} </h5>
   <p class="star-ratings-sprite"><span style="width:{% widthratio book.average 1 10 %}%" class="rating"></span></p>
 
   <p class="list-group-item-text">ISBN: {{book.ISBN}}</p>
@@ -55,7 +36,6 @@
   </div>
 </div>
 </div>
-
 <h5><span class="glyphicon glyphicon-list-alt"></span>  Customer Feedbacks ({{feedback_list|length}}) 
   
 <a style="font-size:12px" href="/bookstore/detail/{{book.ISBN}}/2">Top 2 Most Useful | </a>
@@ -65,6 +45,25 @@
 
 </h5>
 
+{%if error == '1'%}
+<div class="alert alert-danger" id="alert_box" role="alert">
+<a href="/bookstore/detail/{{book.ISBN}}/" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+  <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+  <strong>Sorry</strong> You cannot vote yourself 
+</div>
+{%elif error == '2'%}
+<div class="alert alert-danger" id="alert_box" role="alert">
+<a href="/bookstore/detail/{{book.ISBN}}/" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+  <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+  <strong>Sorry</strong> You cannot vote twice
+</div>
+{%elif error == '3'%}
+<div class="alert alert-success" id="alert_box" role="alert">
+<a href="/bookstore/detail/{{book.ISBN}}/" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+  <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+  <strong>Success</strong> Vote recorded
+</div>
+{%endif%}
 
 <div class="list-group" style="max-height:250px;min-height:0px;overflow-y:auto">
 {% for feedback in feedback_list %}
@@ -108,8 +107,32 @@
 <div>
  <form action="/bookstore/feedback/" method="POST" id="FeedbackForm"> {% csrf_token %}
  <h5><span class="glyphicon glyphicon-star"></span> My Feedback</h5>
- Score (1-10):
-<div class="acidjs-rating-stars">
+ {%if error == '4'%}
+ <div class="alert alert-danger" id="alert_box" role="alert">
+<a href="/bookstore/detail/{{book.ISBN}}/" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+  <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+  <strong>Sorry</strong> Please provide feedback score and text.
+</div>
+{%elif error == '5'%}
+ <div class="alert alert-danger" id="alert_box" role="alert">
+<a href="/bookstore/detail/{{book.ISBN}}/" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+  <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+  <strong>Sorry</strong> You can only feedback this book once.
+</div>
+{%elif error == '6'%}
+<div class="alert alert-success" id="alert_box" role="alert">
+<a href="/bookstore/detail/{{book.ISBN}}/" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+  <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+  <strong>Success</strong> Feedback recorded
+</div>
+{%endif%}
+ <div class="list-group-item">
+ <div class="row">
+   <div class="col-lg-2">
+     <span class="list-group-item-text">Score(1-10)</span>
+   </div>
+   <div class="col-lg-10">
+     <div class="acidjs-rating-stars">
 <input type="radio" name="feedbackscore" id="feedback-score-0" value="10" title="1" data-toggle="tooltip"/><label for="feedback-score-0"></label><!--
 --><input type="radio" name="feedbackscore" id="feedback-score-1" value="9" title="1" data-toggle="tooltip" /><label for="feedback-score-1"></label><!--
 --><input type="radio" name="feedbackscore" id="feedback-score-2" value="8" title="1" data-toggle="tooltip" /><label for="feedback-score-2"></label><!--
@@ -120,12 +143,25 @@
 --><input type="radio" name="feedbackscore" id="feedback-score-7"  value="3" title="1" data-toggle="tooltip" /><label for="feedback-score-7"></label><!--
 --><input type="radio" name="feedbackscore" id="feedback-score-8"  value="2" title="1" data-toggle="tooltip" /><label for="feedback-score-8"></label><!--
 --><input type="radio" name="feedbackscore" id="feedback-score-9"  value="1" title="1" data-toggle="tooltip" /><label for="feedback-score-9"></label>
-</div>
-   <input class="hidden" id="feedback_score" name="feedback_score" value="0"></input>
+</div>  <label class="badge" id="scorechoice">0</label>
+   </div>
+ </div>
+ <div class="row">
+   <div class="col-lg-2">
+     <span class="list-group-item-text">Feedback</span>
+   </div>
+   <div class="col-lg-10">
+     <input class="hidden" id="feedback_score" name="feedback_score" value="0"/>
     <textarea class="form-control" id="feedback_text" name="feedback_text" value="" placeholder="write down your feedback for this book."></textarea> 
-    <input type="hidden" id="feedback_isbn" name="feedback_isbn" value="{{book.ISBN}}"></input>
-    <button type="submit" class="btn btn-primary btn-success pull-right" name="order">Submit</button>
-
+    <input type="hidden" id="feedback_isbn" name="feedback_isbn" value="{{book.ISBN}}"/>
+   </div>
+ </div>
+ <div class="row">
+   <div class="col-lg-12">
+     <button type="submit" class="btn btn-primary btn-success pull-right" name="order">Submit</button>
+   </div>
+ </div>
+ </div>
 </form> 
 </div>
 
@@ -193,6 +229,8 @@
 $('input[name=feedbackscore]').click(function() {
     score = $('input[name=feedbackscore]:checked').val();
     $('#feedback_score').val(score);
+    // $('#scorechoice').removeClass('hidden');
+    $('#scorechoice').text(score+'');
 });
 
 $('input[type=radio][name=feedbackscore]').tooltip({placement:"top", trigger: "hover"});

@@ -24,8 +24,9 @@ def index(request):
     isManager = request.user.is_superuser
     page_title = "Most Popular Recommendations"
     try:
-        cur.execute("SELECT b.*,T.average FROM bookstore_book b,(SELECT book_id, AVG(score) AS average\
-         FROM bookstore_feedback GROUP BY book_id) T WHERE b.ISBN=T.book_id ORDER BY T.average DESC;")
+        cur.execute("SELECT b.*,T.average FROM bookstore_book b,(SELECT book_id, AVG(score) AS average \
+            FROM bookstore_feedback GROUP BY book_id) T WHERE b.ISBN=T.book_id UNION SELECT b.*,0 AS average \
+        FROM bookstore_book b WHERE b.ISBN NOT IN (SELECT book_id FROM bookstore_feedback) ORDER BY average DESC;")
         columns = [col[0] for col in cur.description]
         book_list = [dict(zip(columns, row)) for row in cur.fetchall()][:10]
     except:
@@ -37,9 +38,10 @@ def index(request):
         subject = request.POST['search_subject']
         orderby = request.POST['orderby']
         page_title = "Your Search Results "
-        sql ="SELECT b.*,average from (SELECT * FROM bookstore_book where title LIKE '%s' and \
-        author LIKE '%s' and publisher LIKE'%s' and subject LIKE '%s') b, (SELECT book_id, AVG(score) AS average\
-        FROM bookstore_feedback GROUP BY book_id) T WHERE b.ISBN=T.book_id order by %s DESC"%\
+        sql ="SELECT b.*,average from (SELECT * FROM bookstore_book where title LIKE '%s' and author LIKE '%s' \
+            and publisher LIKE'%s' and subject LIKE '%s') b, (SELECT book_id, AVG(score) AS average FROM \
+            bookstore_feedback GROUP BY book_id UNION SELECT ISBN,0 FROM bookstore_book WHERE ISBN NOT IN \
+            (SELECT book_id FROM bookstore_feedback)) T WHERE b.ISBN=T.book_id order by %s DESC "%\
         (searchValue(title),searchValue(author),searchValue(publisher),searchValue(subject),orderby)
         cur.execute(sql)
         columns = [col[0] for col in cur.description]
@@ -84,13 +86,17 @@ def feedback(request):
     username = request.user.username
     now=datetime.datetime.now()
     date="%s/%s/%s" % (now.day, now.month, now.year)
-    try:
-        sql = "INSERT INTO bookstore_feedback VALUES ('%s','%s','%s','%s','%s')"%\
-                (ISBN,username, text,score,date)
-        cur.execute(sql)
-    except:
-        return HttpResponse("Invalid request")
-    return HttpResponseRedirect('/bookstore/detail/'+ISBN)
+    if score != 0 or text.replace(" ", "") != "":
+        try:
+            sql = "INSERT INTO bookstore_feedback VALUES ('%s','%s','%s','%s','%s')"%\
+                    (ISBN,username, text,score,date)
+            cur.execute(sql)
+        except:
+            return redirect(reverse("detail",args=[ISBN,0,5]))
+        return redirect(reverse("detail",args=[ISBN,0,6]))
+    else:
+        return redirect(reverse("detail",args=[ISBN,0,4]))
+    
 
 def user_login(request):
     context = RequestContext(request)
