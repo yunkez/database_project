@@ -75,6 +75,31 @@
 </div>
 </div>
 
+{% endfor %}
+</div>
+
+<div class="modal fade" id="AddModal" tabindex="-1" role="dialog" aria-labelledby="AddModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="AddModalLabel"></h4>
+      </div>
+      <form action="/bookstore/add/" method="POST" id="OrderForm"> {% csrf_token %}
+        <div class="modal-body">
+          <h5 class="list-group-item-text">Add <input id="add_copies" name="add_copies" value=""/> copies | <span class="list-group-item-text" id="modalavail"></span></h5>
+          
+        </div>
+      <div class="modal-footer">
+          <input type="hidden" id="add_isbn" name="add_isbn"/>
+          <input type="hidden" id="add_title" name="add_title"/>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary" name="order">Confirm</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
 <div class="modal fade" id="OrderModal" tabindex="-1" role="dialog" aria-labelledby="OrderModalLabel">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -109,31 +134,6 @@
   </div>
 </div>
 
-{% endfor %}
-</div>
-
-<div class="modal fade" id="AddModal" tabindex="-1" role="dialog" aria-labelledby="AddModalLabel">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title" id="AddModalLabel"></h4>
-      </div>
-      <form action="/bookstore/add/" method="POST" id="OrderForm"> {% csrf_token %}
-        <div class="modal-body">
-          <h5 class="list-group-item-text">Add <input id="add_copies" name="add_copies" value=""/> copies | <span class="list-group-item-text" id="modalavail"></span></h5>
-          
-        </div>
-      <div class="modal-footer">
-          <input type="hidden" id="add_isbn" name="add_isbn"/>
-          <input type="hidden" id="add_title" name="add_title"/>
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-          <button type="submit" class="btn btn-primary" name="order">Confirm</button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
-
 
 
 
@@ -148,8 +148,17 @@ $('#OrderModal').on('show.bs.modal', function (event) {
   modal.find('#OrderModalLabel').text('Place order for '+ book_title+ ' ?')
   modal.find('#modalavail').text('Available copies: '+ book_copies)
   $('#spinnercontainer').html('<input data-ride="spinner" id="spinner" class="form-control input-number" value="1" data-min="1" data-max="'+book_copies+'" name="spinner">')
+  $('#spinner').blur(function(){
+    if ($('#spinner').val() > book_copies){
+      $('#spinner').val(book_copies)
+    }
+  })
   document.getElementById("order_isbn").value=book_isbn
   document.getElementById("order_title").value=book_title
+});
+
+$('#OrderModal').on('hide.bs.modal', function (event) {
+  $('#spinnercontainer').html('<input>')
 });
 
 $('#AddModal').on('show.bs.modal', function (event) {
