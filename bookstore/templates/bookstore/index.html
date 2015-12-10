@@ -75,6 +75,40 @@
 </div>
 </div>
 
+<div class="modal fade" id="OrderModal" tabindex="-1" role="dialog" aria-labelledby="OrderModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="OrderModalLabel"></h4>
+      </div>
+      <form action="/bookstore/order/" method="POST" id="OrderForm"> {% csrf_token %}
+        <div class="modal-body">
+           <div class="input-group">
+            <span class="input-group-btn">
+          <button type="button" class="btn btn-default" data-value="decrease" data-target="#spinner" data-toggle="spinner">
+            <span class="glyphicon glyphicon-minus"></span>
+        </button>
+            </span>
+            <span id="spinnercontainer"></span>
+      <span class="input-group-btn">
+        <button type="button" class="btn btn-default" data-value="increase" data-target="#spinner" data-toggle="spinner">
+            <span class="glyphicon glyphicon-plus"></span>
+          </button>
+        </span>
+        </div>
+          <h5 class="list-group-item-text" id="modalavail"></h5>
+        </div>
+      <div class="modal-footer">
+          <input type="hidden" id="order_isbn" name="order_isbn"/>
+          <input type="hidden" id="order_title" name="order_title"/>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary" name="order">Confirm</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
 {% endfor %}
 </div>
 
@@ -100,47 +134,12 @@
   </div>
 </div>
 
-<div class="modal fade" id="OrderModal" tabindex="-1" role="dialog" aria-labelledby="OrderModalLabel">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title" id="OrderModalLabel"></h4>
-      </div>
-      <form action="/bookstore/order/" method="POST" id="OrderForm"> {% csrf_token %}
-        <div class="modal-body">
-           <div class="input-group">
-            <span class="input-group-btn">
-          <button type="button" class="btn btn-default" data-value="decrease" data-target="#spinner" data-toggle="spinner">
-            <span class="glyphicon glyphicon-minus"></span>
-        </button>
-            </span>
-      <input data-ride="spinner" id="spinner" class="form-control input-number" value="1" data-min="1" name="spinner">
-      <span class="input-group-btn">
-        <button type="button" class="btn btn-default" data-value="increase" data-target="#spinner" data-toggle="spinner">
-            <span class="glyphicon glyphicon-plus"></span>
-          </button>
-        </span>
-        </div>
-          <h5 class="list-group-item-text" id="modalavail"></h5>
-        </div>
-      <div class="modal-footer">
-          <input type="hidden" id="order_isbn" name="order_isbn"/>
-          <input type="hidden" id="order_title" name="order_title"/>
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-          <button type="submit" class="btn btn-primary" name="order">Confirm</button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
+
 
 
 <script type="text/javascript">
 
-
-
 $('#OrderModal').on('show.bs.modal', function (event) {
-  $( "#spinner" ).val(1)
   var button = $(event.relatedTarget) 
   var book_title = button.data('booktitle') 
   var book_isbn = button.data('bookisbn') 
@@ -148,16 +147,10 @@ $('#OrderModal').on('show.bs.modal', function (event) {
   var modal = $(this)
   modal.find('#OrderModalLabel').text('Place order for '+ book_title+ ' ?')
   modal.find('#modalavail').text('Available copies: '+ book_copies)
-  $('#spinner').attr('data-max',book_copies)
-  $( "#spinner" ).change(function() {
-    if ($( "#spinner" ).val()>book_copies){
-      $( "#spinner" ).val(book_copies)
-    }
-  });
+  $('#spinnercontainer').html('<input data-ride="spinner" id="spinner" class="form-control input-number" value="1" data-min="1" data-max="'+book_copies+'" name="spinner">')
   document.getElementById("order_isbn").value=book_isbn
   document.getElementById("order_title").value=book_title
 });
-
 
 $('#AddModal').on('show.bs.modal', function (event) {
   var button = $(event.relatedTarget) 
