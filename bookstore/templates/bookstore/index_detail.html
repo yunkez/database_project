@@ -37,12 +37,12 @@
 </div>
 </div>
 <h5><span class="glyphicon glyphicon-list-alt"></span>  Customer Feedbacks ({{feedback_list|length}}) 
-  
+{% if feedback_list|length > 0%}
 <a style="font-size:12px" href="/bookstore/detail/{{book.ISBN}}/2">Top 2 Most Useful | </a>
 
 <a style="font-size:12px" href="/bookstore/detail/{{book.ISBN}}/1"> Top 1 Most Useful | </a>
 <a style="font-size:12px" href="/bookstore/detail/{{book.ISBN}}"> See All Reviews</a> 
-
+{% endif%}
 </h5>
 
 {%if error == '1'%}
@@ -88,15 +88,14 @@
 <input type="hidden" id="vote_rater" name="vote_rater" value="{{feedback.customer_id}}"></input>
 
 <p>Rate this feedback</p>
-<button class="btn btn-primary btn-xs" style="width:90px" type="submit" id="vote_score" name="vote_score" value='2'>
-  <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span> very useful
-</button>{{feedback.2}}<br>
-<button class="btn btn-warning btn-xs" style="width:90px" type="submit" id="vote_score" name="vote_score" value='1'>
-  <span class="glyphicon glyphicon-heart" aria-hidden="true"></span> useful
-</button>{{feedback.1}}<br>
-<button class="btn btn-default btn-xs" style="width:90px" type="submit" id="vote_score" name="vote_score" value='0'>
-  <span class="glyphicon glyphicon-thumbs-down" aria-hidden="true"></span> useless
-</button>{{feedback.0}}
+<button class="btn btn-primary btn-xs" style="width:100px" type="submit" id="vote_score" name="vote_score" value='2'>
+  <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span> very useful  {{feedback.2}} </button><br>
+<button class="btn btn-warning btn-xs" style="width:100px" type="submit" id="vote_score" name="vote_score" value='1'>
+  <span class="glyphicon glyphicon-heart" aria-hidden="true"></span> useful  {{feedback.1}}
+</button><br>
+<button class="btn btn-default btn-xs" style="width:100px" type="submit" id="vote_score" name="vote_score" value='0'>
+  <span class="glyphicon glyphicon-thumbs-down" aria-hidden="true"></span> useless  {{feedback.0}}
+</button>
  </form>
 
   </div>
