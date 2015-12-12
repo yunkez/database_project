@@ -5,12 +5,13 @@
 {% block content %}
 
 {% if created%}
+<div class="text-center">
 <form class="form-signin">
 <br><br><br>
-<strong>Successful</strong><br>
+<h2  class="text-success">Successfully Added</h2><br>
 <a href="/bookstore">Return to the homepage.</a><br/>
 </form>
-
+</div>
 {% else %}
 <form action="/bookstore/addnewbook/" class="form-signin" method="post" id="book_form" enctype="multipart/form-data"> 
 {% csrf_token %}
