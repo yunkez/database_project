@@ -5,7 +5,7 @@ from . import views
 urlpatterns = [
     url(r'^$', views.index, name='index'),
     url(r'^detail/([0-9]+)/$', views.detail, name='detail'),
-    url(r'^detail/([0-9]+)/([0-9])$', views.detail, name='detail'),
+    url(r'^detail/([0-9]+)/([0-9]+)$', views.detail, name='detail'),
     url(r'^detail/([0-9]+)/([0-9])/([0-6]{1})$', views.detail, name='detail'),
     url(r'^vote/([0-9]+)/$', views.vote, name='vote'),
     url(r'^logout/$', views.logoutView, name='logout'),

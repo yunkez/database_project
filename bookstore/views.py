@@ -177,9 +177,16 @@ def order(request):
     cur = connection.cursor()
     completed = False
     book_list = ""
+    ISBN = ""
     if request.method == 'POST':
         ISBN = request.POST['order_isbn']
-        copies = int(request.POST['spinner'])  
+        copies = request.POST['spinner']
+        if not copies.isdigit():
+            return HttpResponseRedirect('/bookstore/order')
+        else:
+            copies = int(copies)
+        if copies==0:
+            return HttpResponseRedirect('/bookstore/order')
         try:
             cur.execute("SELECT copies FROM bookstore_book WHERE ISBN = '%s'"%(ISBN))
             avail = int(cur.fetchone()[0])  

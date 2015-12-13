@@ -152,10 +152,11 @@ $('#OrderModal').on('show.bs.modal', function (event) {
     if ($('#spinner').val() > book_copies){
       alert("Not enough stock!")
        $('#spinner').val(book_copies)
-     }
+     } 
   });
   document.getElementById("order_isbn").value=book_isbn
   document.getElementById("order_title").value=book_title
+
 });
 
 $('#OrderModal').on('hide.bs.modal', function (event) {
