@@ -38,9 +38,24 @@
 </div>
 <h5><span class="glyphicon glyphicon-list-alt"></span>  Customer Feedbacks ({{feedback_list|length}}) 
 {% if feedback_list|length > 0%}
-<a style="font-size:12px" href="/bookstore/detail/{{book.ISBN}}/2">Top 2 Most Useful | </a>
-<a style="font-size:12px" href="/bookstore/detail/{{book.ISBN}}/1"> Top 1 Most Useful | </a>
-<a style="font-size:12px" href="/bookstore/detail/{{book.ISBN}}"> See All Reviews</a> 
+<div class="dropdown pull-right">
+ <p class="text-primary dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown" style="cursor:pointer">Top Most Useful <span class="caret"></span></p>
+  
+  <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+    <li><a href="/bookstore/detail/{{book.ISBN}}">See All Reviews</a></li>
+    <li role="separator" class="divider"></li>
+    <li><a href="/bookstore/detail/{{book.ISBN}}/1">1</a></li>
+    <li><a href="/bookstore/detail/{{book.ISBN}}/2">2</a></li>
+    <li><a href="/bookstore/detail/{{book.ISBN}}/3">3</a></li>
+    <li><a href="/bookstore/detail/{{book.ISBN}}/4">4</a></li>
+    <li><a href="/bookstore/detail/{{book.ISBN}}/5">5</a></li>
+    <li><a href="/bookstore/detail/{{book.ISBN}}/6">6</a></li>
+    <li><a href="/bookstore/detail/{{book.ISBN}}/7">7</a></li>
+    <li><a href="/bookstore/detail/{{book.ISBN}}/8">8</a></li>
+    <li><a href="/bookstore/detail/{{book.ISBN}}/9">9</a></li>
+    <li><a href="/bookstore/detail/{{book.ISBN}}/10">10</a></li>
+  </ul>
+</div>
 {% endif%}
 </h5>
 
@@ -109,7 +124,7 @@
  <div class="alert alert-danger" id="alert_box" role="alert">
 <a href="/bookstore/detail/{{book.ISBN}}/" class="close" data-dismiss="alert" aria-label="close">&times;</a>
   <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-  <strong>Sorry</strong> Please provide feedback score and text.
+  <strong>Sorry</strong> Please provide feedback score.
 </div>
 {%elif error == '5'%}
  <div class="alert alert-danger" id="alert_box" role="alert">
