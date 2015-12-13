@@ -148,11 +148,12 @@ $('#OrderModal').on('show.bs.modal', function (event) {
   modal.find('#OrderModalLabel').text('Place order for '+ book_title+ ' ?')
   modal.find('#modalavail').text('Available copies: '+ book_copies)
   $('#spinnercontainer').html('<input data-ride="spinner" id="spinner" class="form-control input-number" value="1" data-min="1" data-max="'+book_copies+'" name="spinner">')
-  $('#spinner').blur(function(){
+  $("#spinner").bind("change keyup", function() {
     if ($('#spinner').val() > book_copies){
-      $('#spinner').val(book_copies)
-    }
-  })
+      alert("Not enough stock!")
+       $('#spinner').val(book_copies)
+     }
+  });
   document.getElementById("order_isbn").value=book_isbn
   document.getElementById("order_title").value=book_title
 });
