@@ -40,9 +40,26 @@
   </div>
 </form>
 
-<h3>{{page_title}} ({{book_list|length}})</h3>
+<h3>{{page_title}} ({{book_list|length}})
+    <span class="step-links pull-right" style="font-size:12px">
+        {% if books.has_previous %}
+            <a href="?page={{ books.previous_page_number }}">Previous </a>
+        {% endif %}
+
+{% for num in books.paginator.page_range %}
+  {% if num == books.number %}
+    <span class="current"><b>{{ num }}</b></span>
+  {% else %}
+    <a href="?page={{ num }}"> {{ num }}</a>
+  {% endif %} 
+{% endfor %}
+
+        {% if books.has_next %}
+            <a href="?page={{ books.next_page_number }}"> Next</a>
+        {% endif %}
+    </span></h3>
 <div class="list-group">
-{% for book in book_list %}
+{% for book in books %}
 <div class="list-group-item bs-callout-warning">
 <div class="row">
   <div class="col-lg-2">
@@ -95,6 +112,23 @@
 </div>
 
 {% endfor %}
+<h3><span class="step-links pull-right" style="font-size:12px">
+        {% if books.has_previous %}
+            <a href="?page={{ books.previous_page_number }}">Previous </a>
+        {% endif %}
+
+{% for num in books.paginator.page_range %}
+  {% if num == books.number %}
+    <span class="current"><b>{{ num }}</b></span>
+  {% else %}
+    <a href="?page={{ num }}"> {{ num }}</a>
+  {% endif %} 
+{% endfor %}
+
+        {% if books.has_next %}
+            <a href="?page={{ books.next_page_number }}"> Next</a>
+        {% endif %}
+    </span></h3>
 </div>
 
 <div class="modal fade" id="AddModal" tabindex="-1" role="dialog" aria-labelledby="AddModalLabel">

@@ -11,6 +11,7 @@ from django.db import connection
 import datetime
 import ast
 from django.core.urlresolvers import reverse
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 @login_required(login_url='/login')
 def index(request):
@@ -46,7 +47,17 @@ def index(request):
         cur.execute(sql)
         columns = [col[0] for col in cur.description]
         book_list = [dict(zip(columns, row)) for row in cur.fetchall()]
-    return render(request, 'bookstore/index.html',{'book_list': book_list,'author':author,'subject':subject,
+    paginator = Paginator(book_list, 5)
+    page = request.GET.get('page')
+    try:
+        books = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        books = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        books = paginator.page(paginator.num_pages)
+    return render(request, 'bookstore/index.html',{'book_list': book_list,'books':books,'author':author,'subject':subject,
             'title':title,'publisher':publisher,'orderby':orderby,'base_template':'base_auth.html',
             'page_title':page_title,'isManager':isManager})
 
@@ -226,7 +237,17 @@ def orderRecords(request):
         order_list = [dict(zip(columns, row)) for row in cur.fetchall()]
     except:
         order_list = null
-    return render(request,'bookstore/order_record.html',{'order_list': order_list,'base_template':'base_auth.html'})
+    paginator = Paginator(order_list, 20)
+    page = request.GET.get('page')
+    try:
+        orders = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        orders = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        orders = paginator.page(paginator.num_pages)
+    return render(request,'bookstore/order_record.html',{'order_list': order_list,'orders':orders,'base_template':'base_auth.html'})
 
 @login_required(login_url='/login')
 def account(request,count=3):

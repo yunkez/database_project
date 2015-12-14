@@ -27,4 +27,22 @@
 	{%else%}
 	<h5>You have no order records.</h5>
 	{%endif%}
+</table>
+<h3><span class="step-links" style="font-size:12px">
+        {% if orders.has_previous %}
+            <a href="?page={{ orders.previous_page_number }}">Previous </a>
+        {% endif %}
+
+{% for num in orders.paginator.page_range %}
+  {% if num == orders.number %}
+    <span class="current"><b>{{ num }}</b></span>
+  {% else %}
+    <a href="?page={{ num }}"> {{ num }}</a>
+  {% endif %} 
+{% endfor %}
+
+        {% if orders.has_next %}
+            <a href="?page={{ orders.next_page_number }}"> Next</a>
+        {% endif %}
+    </span></h3>
 {% endblock %}
