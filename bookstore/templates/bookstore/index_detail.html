@@ -8,7 +8,21 @@
 <div class="list-group-item bs-callout-warning">
 <div class="row">
   <div class="col-lg-2">
-    <img class="img-thumbnail" src="http://ecx.images-amazon.com/images/I/51AcjY2mWgL._SX358_BO1,204,203,200_.jpg"/>
+    {%if 'Database' in book.subject %}
+  <img class="img-thumbnail" src="http://ecx.images-amazon.com/images/I/51AcjY2mWgL._SX358_BO1,204,203,200_.jpg"/>
+  {%elif 'Computation' in book.subject%}
+  <img class="img-thumbnail" src="http://ecx.images-amazon.com/images/I/51Hrn1CywLL._SX381_BO1,204,203,200_.jpg"/>
+  {%elif 'Literature' in book.subject%}
+  <img class="img-thumbnail" src="http://ecx.images-amazon.com/images/I/51OEDPH8yNL._SX332_BO1,204,203,200_.jpg"/>
+  {%elif 'Probability' in book.subject%}
+  <img class="img-thumbnail" src="http://ecx.images-amazon.com/images/I/41UsZsQbuQL._SX382_BO1,204,203,200_.jpg"/>
+  {%elif 'Programming' in book.subject%}
+  <img class="img-thumbnail" src="http://ecx.images-amazon.com/images/I/515qWO%2B9jVL._SX331_BO1,204,203,200_.jpg"/>
+  {%elif 'Math' in book.subject%}
+  <img class="img-thumbnail" src="http://ecx.images-amazon.com/images/I/51DyBEL8rML._SX322_BO1,204,203,200_.jpg"/>
+  {%else%}
+  <img class="img-thumbnail" src="http://ecx.images-amazon.com/images/I/51g0rrdgalL._SX322_BO1,204,203,200_.jpg"/>
+  {%endif%}
   </div>
   <div class="col-lg-8">
     <h4 class="list-group-item-heading">{{book.title}}</h4>
