@@ -79,13 +79,15 @@ def detail(request,isbn,count=0,err=0):
 
     name=''
     i = -1
-    while (True and (i<count-1 or count==0)):
+    while (True):
         tmp = cur.fetchone()
         if tmp == None: break
         if(name!=tmp[1]): 
             name = tmp[1]
-            feedback_list.append({'customer_id':tmp[1],'book_id':tmp[0],'text':tmp[2],'score':tmp[3],'date':tmp[4],'0':0L,'1':0L,'2':0L})
             i+=1
+            if (i>=count and count!=0):
+                break;
+            feedback_list.append({'customer_id':tmp[1],'book_id':tmp[0],'text':tmp[2],'score':tmp[3],'date':tmp[4],'0':0L,'1':0L,'2':0L})
             feedback_list[i][str(tmp[5])] = tmp[6]
         else:
             feedback_list[i][str(tmp[5])] = tmp[6]
