@@ -127,7 +127,7 @@
           <input type="hidden" id="order_isbn" name="order_isbn"/>
           <input type="hidden" id="order_title" name="order_title"/>
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-          <button type="submit" class="btn btn-primary" name="order">Confirm</button>
+          <button type="submit" id="OrderCfm" class="btn btn-primary" name="order">Confirm</button>
         </div>
       </form>
     </div>
@@ -140,6 +140,7 @@
 <script type="text/javascript">
 
 $('#OrderModal').on('show.bs.modal', function (event) {
+  $("#OrderCfm").removeAttr("disabled");
   var button = $(event.relatedTarget) 
   var book_title = button.data('booktitle') 
   var book_isbn = button.data('bookisbn') 
@@ -148,11 +149,29 @@ $('#OrderModal').on('show.bs.modal', function (event) {
   modal.find('#OrderModalLabel').text('Place order for '+ book_title+ ' ?')
   modal.find('#modalavail').text('Available copies: '+ book_copies)
   $('#spinnercontainer').html('<input data-ride="spinner" id="spinner" class="form-control input-number" value="1" data-min="1" data-max="'+book_copies+'" name="spinner">')
-  $("#spinner").bind("change keyup", function() {
-    if ($('#spinner').val() > book_copies){
-      alert("Not enough stock!")
-       $('#spinner').val(book_copies)
-     } 
+  if(book_copies==0){
+    $('#spinner').val(0)
+    $("#OrderCfm").attr("disabled", true);
+    alert("Sorry, the book is out of stock.")
+  }
+  $("#spinner").bind("keyup", function() {
+    if(book_copies>0){
+      value = $('#spinner').val()
+      if(value!=""){
+        if (!isNaN(value)){
+          if(value>book_copies){
+            alert("Not enough stock!")
+            $('#spinner').val(book_copies)
+          } else if (value<=0){
+            alert("Please enter a valid number.")
+            $('#spinner').val(1)
+          }
+        } else {
+          alert("Please enter a valid number.")
+          $('#spinner').val(1)
+        }
+      }
+    }
   });
   document.getElementById("order_isbn").value=book_isbn
   document.getElementById("order_title").value=book_title
@@ -191,6 +210,8 @@ function SetValue() {
     document.getElementById("orderby").value = "average";
   }     
 }
+
+
 
 
 </script>
