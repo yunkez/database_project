@@ -187,7 +187,7 @@ def order(request):
             copies = int(copies)
         if copies==0:
             return HttpResponseRedirect('/bookstore/order')
-        try:
+        else:
             cur.execute("SELECT copies FROM bookstore_book WHERE ISBN = '%s'"%(ISBN))
             avail = int(cur.fetchone()[0])  
             if avail>=copies:
@@ -199,9 +199,7 @@ def order(request):
                 cur.execute("UPDATE bookstore_book SET copies='%d' WHERE ISBN='%s'"%(avail-copies,ISBN))
                 completed = True
             else:
-                info = "Not enough stock"
-        except Book.DoesNotExist:
-            info = "Please enter a valid ISBN."
+                return HttpResponseRedirect('/bookstore/order')
     if completed:
         username = request.user.username
         sql = "SELECT title,author,ISBN from bookstore_book where ISBN in (SELECT book_id FROM \
@@ -317,15 +315,19 @@ def add(request):
     completed = False
     if request.method == 'POST':
         ISBN = request.POST['add_isbn']
-        copies = int(request.POST['add_copies']) 
+        copies = request.POST['add_copies']
         title = request.POST['add_title']
         try:
-            cur.execute("SELECT copies FROM bookstore_book WHERE ISBN = '%s'"%(ISBN))
-            avail = int(cur.fetchone()[0])  
+            copies = int(copies)
+        except:
+            return HttpResponseRedirect('/bookstore/order')
+        cur.execute("SELECT copies FROM bookstore_book WHERE ISBN = '%s'"%(ISBN))
+        avail = int(cur.fetchone()[0])  
+        if copies+avail<0:
+            return HttpResponseRedirect('/bookstore/order')
+        else:
             cur.execute("UPDATE bookstore_book SET copies='%d' WHERE ISBN='%s'"%(avail+copies,ISBN))
             completed = True
-        except Book.DoesNotExist:
-            info = "Please enter a valid ISBN."
     return render(request,'bookstore/finish_add_book.html',{'completed':completed,'title':title,'copies':copies,
         'ISBN':ISBN,'base_template':'base_auth.html'})
 

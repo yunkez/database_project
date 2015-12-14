@@ -258,14 +258,12 @@ $('#OrderModal').on('show.bs.modal', function (event) {
   modal.find('#modalavail').text('Available copies: '+ book_copies)
   document.getElementById("order_isbn").value=book_isbn
   document.getElementById("order_title").value=book_title
-  $("#spinner").bind("keyup", function() {
+  $("#spinner").bind("change keyup", function() {
     if ($('#spinner').val() > book_copies){
       alert("Not enough stock!")
        $('#spinner').val(book_copies)
      }
-  });
-  $("#spinner").bind("change", function() {
-    if ($('#spinner').val() == 0 ){
+    if ($('#spinner').val() != "" && $('#spinner').val()==0 ){
       alert("Please enter a valid number.")
        $('#spinner').val(1)
      } 
