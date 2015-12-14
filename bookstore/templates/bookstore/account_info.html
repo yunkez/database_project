@@ -88,13 +88,14 @@
 	<div id="editAccountInfo" class="hidden">	
 		<form id="user_form" method="post" action="/bookstore/account/" enctype="multipart/form-data">
 		    {% csrf_token %}
+		    {% for user in user_info %}
 		    {% for field in user_form %}
    				<div class="input-group">
    				<label for="{{ field.id_for_label }}" class="sr-only">{{ field.label_tag }}</label>
    				<span class="input-group-addon glyphicon glyphicon-edit" aria-hidden="true"></span>
    				{{field}}
 				</div>
-   			{% endfor %}<br>
+   			{% endfor %}{% endfor %}<br>
 		    <input class="btn btn-success" type="submit" name="submit" value="Save" />
 		</form>
 	</div>
@@ -167,6 +168,10 @@
 
 
 <script type="text/javascript">
+$("#user_fullname").attr('value','{{user.fullname}}')
+$("#user_phone").attr('value','{{user.phone}}')
+$("#user_card").attr('value','{{user.card}}')
+$("#user_address").attr('value','{{user.address}}')
 
 $("#count").bind("change", function() {
    $("#search").attr("href", "/bookstore/account/"+$(this).val())

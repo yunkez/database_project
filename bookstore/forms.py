@@ -37,10 +37,10 @@ class CustomerChangeForm(forms.ModelForm):
         model = Customer
         fields = ['fullname','phone','card','address']
         widgets = {
-            'fullname': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'edit full name here'}),
-            'phone': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'edit phone number here'}),
-            'card': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'edit card number here'}),
-            'address': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'edit address here'}),
+            'fullname': forms.TextInput(attrs={'class': 'form-control','id':'user_fullname', 'placeholder': 'edit full name here'}),
+            'phone': forms.NumberInput(attrs={'class': 'form-control','id':'user_phone', 'placeholder': 'edit phone number here'}),
+            'card': forms.NumberInput(attrs={'class': 'form-control','id':'user_card', 'placeholder': 'edit card number here'}),
+            'address': forms.TextInput(attrs={'class': 'form-control','id':'user_address', 'placeholder': 'edit address here'}),
         }
 
 	def clean_password(self):
