@@ -31,7 +31,11 @@
     {% if isManager %}
     <button class="btn btn-s btn-warning" data-toggle="modal" data-target="#AddModal" data-booktitle="{{book.title}}" data-bookisbn="{{book.ISBN}}" data-bookcopies="{{book.copies}}"> Add </button>
     {% else %}
+    {%if book.copies > 0%}
     <button class="btn btn-s btn-warning" id="OrderButton" data-toggle="modal"  data-booktitle="{{book.title}}" data-bookisbn="{{book.ISBN}}" data-bookcopies="{{book.copies}}" onclick=openModel("{{book.copies}}")> Order </button>
+{%else%}
+    <button class="btn btn-s btn-default" onclick="alert('Sorry, the book is out of stock.');"> Order </button>
+    {%endif%}
     {% endif %}
   </div>
 </div>
